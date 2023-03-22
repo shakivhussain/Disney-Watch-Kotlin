@@ -1,4 +1,4 @@
-package com.shakiv.husain.disneywatch.presentation.ui
+package com.shakiv.husain.disneywatch.presentation.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
+import com.shakiv.husain.disneywatch.presentation.ui.BaseFragment
 
 class HomeFragment : BaseFragment() {
 
