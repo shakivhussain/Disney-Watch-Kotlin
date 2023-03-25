@@ -28,9 +28,8 @@ class MovieViewModel @Inject constructor(
 //        }
 //    }
 
-    fun getTopRatedMovies() = flow<List<Movie>> {
-        repository.getTopRatedMovies()
+    suspend fun getTopRatedMovies() =repository.getTopRatedMovies()
 
-    }
+
 
 }

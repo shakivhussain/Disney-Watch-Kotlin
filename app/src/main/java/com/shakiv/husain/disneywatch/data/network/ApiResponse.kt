@@ -1,4 +1,4 @@
-package com.shakiv.husain.disneywatch.data.repository
+package com.shakiv.husain.disneywatch.data.network
 
 sealed class ApiResponse<out T> {
     data class Success<out T>(
@@ -6,7 +6,8 @@ sealed class ApiResponse<out T> {
     ) : ApiResponse<T>()
 
     data class Failure<out T>(
-        val status_code: Int, val status_message: String, val results: T?, val throwable: Throwable? = null
+        val status_code: Int, val status_message: String, val results: T?,
+        val throwable: Throwable? = null
     ) : ApiResponse<T>()
 
 }

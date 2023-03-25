@@ -6,8 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.ActivityMainBinding
 import com.shakiv.husain.disneywatch.presentation.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.presentation.ui.home.MovieViewModel
@@ -23,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var navController: NavController? = null
 
     @Inject
-    lateinit var mainViewModelFactory : MainViewModelFactory
+    lateinit var mainViewModelFactory: MainViewModelFactory
 
 
     lateinit var viewModel: MovieViewModel
@@ -35,23 +34,24 @@ class MainActivity : AppCompatActivity() {
 
         (application as DisneyApplication).appComponent.inject(this)
 
-        viewModel = ViewModelProvider(this,  mainViewModelFactory)[MovieViewModel::class.java]
+        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
 
 
         lifecycleScope.launch {
-            delay(1000)
             viewModel.getTopRatedMovies().collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val data = it.data
+                    }
 
-                Log.d("Response","Reponse : ${it}")
+                    is Resource.Failure  -> {
+                    }
+
+                    is Resource.Loading  -> {
+                    }
+                }
 
             }
         }
-
-//        viewModel.productsLiveData.observe(this){
-//
-//
-//            Log.d("Response","Reponse : ${it}")
-//        }
-
     }
 }

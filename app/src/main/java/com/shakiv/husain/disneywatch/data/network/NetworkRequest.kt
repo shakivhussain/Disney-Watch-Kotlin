@@ -1,4 +1,4 @@
-package com.shakiv.husain.disneywatch.data.repository
+package com.shakiv.husain.disneywatch.data.network
 
 import org.json.JSONObject
 import retrofit2.Response
@@ -9,18 +9,20 @@ object NetworkRequest {
             val response = api()
             val code = response.code()
             val body = response.body()
-
-            return if (response.isSuccessful){
+            return if (response.isSuccessful) {
                 ApiResponse.Success(body)
-            }else{
+            } else {
                 val rawRes = response.errorBody()?.string() ?: "{}"
                 val json = JSONObject(rawRes)
                 val m = json.optString("message")
                 ApiResponse.Failure(code, m, body)
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
-            return ApiResponse.Failure(status_code = -1, status_message = e.message ?: "Something went wrong!" , results =  null, throwable =  e)
+            return ApiResponse.Failure(
+                status_code = -1, status_message = e.message ?: "Something went wrong!",
+                results = null, throwable = e
+            )
         }
     }
 }
