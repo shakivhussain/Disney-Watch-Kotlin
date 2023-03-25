@@ -17,12 +17,9 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     private lateinit var bindings: ActivityMainBinding
-    private var navController: NavController? = null
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
-
-
     lateinit var viewModel: MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +28,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(bindings.root)
 
         initViewModel()
+        viewModel.getTopRatedMovies()
 
         lifecycleScope.launch {
-            viewModel.getTopRatedMovies().collectLatest {
+            viewModel.topRatedMovies.collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val data = it.data
@@ -42,10 +40,11 @@ class MainActivity : AppCompatActivity() {
                     is Resource.Failure -> {
                     }
 
+                    is Resource.Failure -> {
+                    }
                     is Resource.Loading -> {
                     }
                 }
-
             }
         }
     }

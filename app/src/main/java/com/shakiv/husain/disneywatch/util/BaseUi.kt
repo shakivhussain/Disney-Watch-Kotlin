@@ -4,5 +4,5 @@ interface BaseUi {
     fun bindViews() {}
     fun bindListeners() {}
     fun bindObservers() {}
-    fun initViewModels()
+    fun initViewModels(){}
 }
