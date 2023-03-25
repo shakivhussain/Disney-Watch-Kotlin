@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
+import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.ActivityMainBinding
 import com.shakiv.husain.disneywatch.presentation.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.presentation.ui.home.MovieViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -19,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private var navController: NavController? = null
 
     @Inject
-    lateinit var mainViewModelFactory : MainViewModelFactory
+    lateinit var mainViewModelFactory: MainViewModelFactory
 
 
     lateinit var viewModel: MovieViewModel
@@ -31,14 +34,24 @@ class MainActivity : AppCompatActivity() {
 
         (application as DisneyApplication).appComponent.inject(this)
 
-        viewModel = ViewModelProvider(this,  mainViewModelFactory)[MovieViewModel::class.java]
+        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
 
 
-        viewModel.productsLiveData.observe(this){
+        lifecycleScope.launch {
+            viewModel.getTopRatedMovies().collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val data = it.data
+                    }
 
+                    is Resource.Failure  -> {
+                    }
 
-            Log.d("Response","Reponse : ${it}")
+                    is Resource.Loading  -> {
+                    }
+                }
+
+            }
         }
-
     }
 }
