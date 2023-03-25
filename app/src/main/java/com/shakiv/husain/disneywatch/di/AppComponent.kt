@@ -2,6 +2,7 @@ package com.shakiv.husain.disneywatch.di
 
 import android.content.Context
 import com.shakiv.husain.disneywatch.MainActivity
+import com.shakiv.husain.disneywatch.presentation.ui.home.HomeFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -11,6 +12,7 @@ import javax.inject.Singleton
 interface AppComponent {
 
     fun inject(mainActivity: MainActivity)
+    fun inject(mainActivity: HomeFragment)
 
     @Component.Factory
     interface Factory {

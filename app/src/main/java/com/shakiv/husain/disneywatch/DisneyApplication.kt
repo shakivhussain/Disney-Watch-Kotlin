@@ -10,8 +10,6 @@ class DisneyApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
         appComponent = DaggerAppComponent.factory().create(this)
-
     }
 }

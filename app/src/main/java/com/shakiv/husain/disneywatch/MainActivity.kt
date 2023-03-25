@@ -1,7 +1,6 @@
 package com.shakiv.husain.disneywatch
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -10,7 +9,6 @@ import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.ActivityMainBinding
 import com.shakiv.husain.disneywatch.presentation.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.presentation.ui.home.MovieViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,10 +30,7 @@ class MainActivity : AppCompatActivity() {
         bindings = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        (application as DisneyApplication).appComponent.inject(this)
-
-        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
-
+        initViewModel()
 
         lifecycleScope.launch {
             viewModel.getTopRatedMovies().collectLatest {
@@ -44,14 +39,19 @@ class MainActivity : AppCompatActivity() {
                         val data = it.data
                     }
 
-                    is Resource.Failure  -> {
+                    is Resource.Failure -> {
                     }
 
-                    is Resource.Loading  -> {
+                    is Resource.Loading -> {
                     }
                 }
 
             }
         }
+    }
+
+    private fun initViewModel() {
+        (application as DisneyApplication).appComponent.inject(this)
+        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
     }
 }
