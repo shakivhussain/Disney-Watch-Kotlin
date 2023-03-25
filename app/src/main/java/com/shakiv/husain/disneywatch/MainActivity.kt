@@ -10,7 +10,6 @@ import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.ActivityMainBinding
 import com.shakiv.husain.disneywatch.presentation.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.presentation.ui.home.MovieViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,8 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModelFactory
-
-
     lateinit var viewModel: MovieViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,22 +32,20 @@ class MainActivity : AppCompatActivity() {
         (application as DisneyApplication).appComponent.inject(this)
 
         viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
-
+        viewModel.getTopRatedMovies()
 
         lifecycleScope.launch {
-            viewModel.getTopRatedMovies().collectLatest {
+            viewModel.topRatedMovies.collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val data = it.data
+                        Log.d("TAGLatest", "onCreate:  $data")
                     }
-
-                    is Resource.Failure  -> {
+                    is Resource.Failure -> {
                     }
-
-                    is Resource.Loading  -> {
+                    is Resource.Loading -> {
                     }
                 }
-
             }
         }
     }
