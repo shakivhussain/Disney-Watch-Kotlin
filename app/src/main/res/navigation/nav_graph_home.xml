@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.shakiv.husain.disneywatch.presentation.ui.home.HomeFragment"
+        android:name="com.shakiv.husain.disneywatch.ui.ui.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/viewDetailsFragment"
-        android:name="com.shakiv.husain.disneywatch.presentation.ui.ViewDetailsFragment"
+        android:name="com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails.ViewDetailsFragment"
         android:label="ViewDetailsFragment"
         tools:layout="@layout/fragment_view_details" />
 

@@ -1,9 +1,7 @@
-package com.shakiv.husain.disneywatch.presentation.ui
+package com.shakiv.husain.disneywatch.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.shakiv.husain.disneywatch.util.BaseUi
 
 open class BaseFragment : Fragment(), BaseUi{

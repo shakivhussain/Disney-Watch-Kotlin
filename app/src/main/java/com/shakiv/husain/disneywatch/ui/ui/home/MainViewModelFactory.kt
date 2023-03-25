@@ -1,4 +1,4 @@
-package com.shakiv.husain.disneywatch.presentation.ui.home
+package com.shakiv.husain.disneywatch.ui.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

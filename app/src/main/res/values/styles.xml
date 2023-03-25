@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="HeadingSemiBold_18">
+        <item name="font">@font/semibold</item>
+        <item name="android:textSize">@dimen/textHeading</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/blackLight</item>
+    </style>
+
+    <style name="SubHeading_12">
+        <item name="font">@font/regular</item>
+        <item name="android:textSize">@dimen/textSubHeading</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/lightGrey</item>
+    </style>
+
+
+</resources>

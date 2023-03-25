@@ -1,10 +1,11 @@
-package com.shakiv.husain.disneywatch.presentation.ui
+package com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
+import com.shakiv.husain.disneywatch.ui.BaseFragment
 
 class ViewDetailsFragment : BaseFragment() {
 

@@ -17,12 +17,13 @@
     <color name="colorGreyLight3">#E6E6E6</color>
     <color name="colorGreyLight2">#CBCBCB</color>
     <color name="colorGreyLight1">#B2B2B2</color>
+    <color name="headerWhite">#FAFAFA</color>
+    <color name="blackLight">#2C3135</color>
+    <color name="lightGrey">#586470</color>
+    // SubHeading
 
 
-
-
-
-
+    <color name="colorHeading">@color/colorWhite</color>
 
 
 </resources>
