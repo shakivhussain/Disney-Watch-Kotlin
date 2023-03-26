@@ -8,7 +8,8 @@ import com.shakiv.husain.disneywatch.data.model.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.data.network.Resource
-import com.shakiv.husain.disneywatch.ui.paging.MoviePagingSource
+import com.shakiv.husain.disneywatch.ui.paging.PopularMoviePagingSource
+import com.shakiv.husain.disneywatch.ui.paging.TrendingMoviePagingSource
 import com.shakiv.husain.disneywatch.util.Constants.API_KEY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,11 +19,12 @@ class NetworkRepository @Inject constructor(
     private val networkService: NetworkService
 ) {
 
+
     suspend fun topRatedMovies(): Flow<Resource<List<Movie>>> = flow {
         this.emit(Resource.Loading(data = null))
         try {
             val data = NetworkRequest.process {
-                networkService.getTopRatedMovies(API_KEY, 1)
+                networkService.getPopularMovies(API_KEY, 1)
             }.run {
                 when (this) {
                     is ApiResponse.Success -> {
@@ -41,10 +43,20 @@ class NetworkRepository @Inject constructor(
         }
     }
 
-    fun getTopRatedMovies(): Flow<PagingData<Movie>> {
+    fun getPopularMovies(): Flow<PagingData<Movie>> {
         val config = PagingConfig(20, 4, true, 20)
+
         return Pager(config) {
-            MoviePagingSource(networkService)
+            PopularMoviePagingSource(networkService)
+        }.flow
+    }
+
+
+    fun getTrendingMovies(): Flow<PagingData<Movie>>{
+         val config = PagingConfig(20, 4, true, 20)
+
+        return Pager(config){
+            TrendingMoviePagingSource(networkService = networkService)
         }.flow
     }
 }

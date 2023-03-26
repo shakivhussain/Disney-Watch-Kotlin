@@ -14,8 +14,12 @@ class MovieViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    fun getTopRatedMovies(): Flow<PagingData<Movie>> {
-        return repository.getTopRatedMovies().cachedIn(viewModelScope)
+    fun getPopularMovies(): Flow<PagingData<Movie>> {
+        return repository.getPopularMovies().cachedIn(viewModelScope)
+    }
+
+    fun getTrendingMovies():Flow<PagingData<Movie>>{
+        return repository.getTrendingMovies().cachedIn(viewModelScope)
     }
 
 

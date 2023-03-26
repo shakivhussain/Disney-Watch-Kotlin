@@ -26,6 +26,7 @@ class HomeFragment : BaseFragment() {
     lateinit var movieViewModel: MovieViewModel
 
     private lateinit var adapter: MovieAdapter
+    private lateinit var trendingMovieAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +38,7 @@ class HomeFragment : BaseFragment() {
 
     private fun initAdapter() {
         adapter = MovieAdapter()
+        trendingMovieAdapter = MovieAdapter()
     }
 
     override fun onCreateView(
@@ -58,11 +60,21 @@ class HomeFragment : BaseFragment() {
     override fun bindViews() {
         super.bindViews()
 
+        binding.layoutPopularMovie.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        binding.layoutPopularMovie.recyclerView.adapter = adapter
 
+        binding.layoutUpcomingMovie.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        binding.layoutUpcomingMovie.recyclerView.adapter = trendingMovieAdapter
 
-        binding.layoutMovie.recyclerView.layoutManager = LinearLayoutManager(context)
-        binding.layoutMovie.recyclerView.adapter = adapter
+//        binding.layoutPopularMovie.recyclerView.apply {
+//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            adapter = adapter
+//        }
 
+//        binding.layoutPopularMovie.recyclerView.apply {
+//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+//            adapter = adapter
+//        }
 
         binding.root.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment)
@@ -78,8 +90,15 @@ class HomeFragment : BaseFragment() {
         super.bindObservers()
 
 
+
         lifecycleScope.launch {
-            movieViewModel.getTopRatedMovies().collectLatest {
+            movieViewModel.getTrendingMovies().collectLatest {
+               trendingMovieAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            movieViewModel.getPopularMovies().collectLatest {
                 it?.let {
                     adapter.submitData(it)
                 }

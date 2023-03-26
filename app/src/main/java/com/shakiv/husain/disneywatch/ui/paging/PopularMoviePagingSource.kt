@@ -8,7 +8,7 @@ import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.util.Constants.API_KEY
 
-class MoviePagingSource(val service: NetworkService) : PagingSource<Int, Movie>() {
+class PopularMoviePagingSource(val service: NetworkService) : PagingSource<Int, Movie>() {
 
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
         return 1
@@ -18,7 +18,7 @@ class MoviePagingSource(val service: NetworkService) : PagingSource<Int, Movie>(
         val key = params.key ?: 1
         return  try {
             val data = NetworkRequest.process {
-                service.getTopRatedMovies(API_KEY, key)
+                service.getPopularMovies(API_KEY, key)
             }.run {
 
                 when (this) {

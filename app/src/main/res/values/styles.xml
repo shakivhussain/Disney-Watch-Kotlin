@@ -6,8 +6,21 @@
         <item name="android:textSize">@dimen/textHeading</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/blackLight</item>
     </style>
+
+
+
+    <style name="HeadingSemiBold_26">
+        <item name="font">@font/semibold</item>
+        <item name="android:textSize">@dimen/textSize26</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/blackLight</item>
+    </style>
+
 
     <style name="SubHeading_12">
         <item name="font">@font/regular</item>
@@ -15,6 +28,18 @@
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
         <item name="android:textColor">@color/lightGrey</item>
+    </style>
+
+    <style name="SubHeading_16">
+        <item name="font">@font/semibold</item>
+        <item name="android:textSize">@dimen/textSize18</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">@color/lightGrey</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">10%</item>
     </style>
 
 

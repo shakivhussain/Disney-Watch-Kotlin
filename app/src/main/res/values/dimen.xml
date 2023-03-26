@@ -6,7 +6,10 @@
 
     // Heading
     <dimen name="textHeading">18dp</dimen>
+    <dimen name="textSize26">26sp</dimen>
     <dimen name="textSubHeading">12sp</dimen>
+    <dimen name="textSize18">18sp</dimen>
+    <dimen name="textSize16">16sp</dimen>
 
 
 </resources>
