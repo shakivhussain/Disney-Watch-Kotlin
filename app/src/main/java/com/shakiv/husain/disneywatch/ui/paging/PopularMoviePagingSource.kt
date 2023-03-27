@@ -3,7 +3,7 @@ package com.shakiv.husain.disneywatch.ui.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.shakiv.husain.disneywatch.data.api.NetworkService
-import com.shakiv.husain.disneywatch.data.model.Movie
+import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.util.Constants.API_KEY

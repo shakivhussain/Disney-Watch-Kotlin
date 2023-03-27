@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.shakiv.husain.disneywatch.data.model.Movie
+import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.databinding.LayoutVerticalMovieItemBinding
 import com.shakiv.husain.disneywatch.util.Constants
 import com.shakiv.husain.disneywatch.util.ImageUtils

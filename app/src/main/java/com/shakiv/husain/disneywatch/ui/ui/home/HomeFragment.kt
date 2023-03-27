@@ -1,6 +1,7 @@
 package com.shakiv.husain.disneywatch.ui.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
@@ -60,10 +62,12 @@ class HomeFragment : BaseFragment() {
     override fun bindViews() {
         super.bindViews()
 
-        binding.layoutPopularMovie.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        binding.layoutPopularMovie.recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.layoutPopularMovie.recyclerView.adapter = adapter
 
-        binding.layoutUpcomingMovie.recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+        binding.layoutUpcomingMovie.recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.layoutUpcomingMovie.recyclerView.adapter = trendingMovieAdapter
 
 //        binding.layoutPopularMovie.recyclerView.apply {
@@ -91,9 +95,10 @@ class HomeFragment : BaseFragment() {
 
 
 
+
         lifecycleScope.launch {
             movieViewModel.getTrendingMovies().collectLatest {
-               trendingMovieAdapter.submitData(it)
+                trendingMovieAdapter.submitData(it)
             }
         }
 

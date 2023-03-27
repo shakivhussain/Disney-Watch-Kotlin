@@ -1,10 +1,12 @@
 package com.shakiv.husain.disneywatch.data.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.shakiv.husain.disneywatch.data.api.NetworkService
-import com.shakiv.husain.disneywatch.data.model.Movie
+import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.data.network.Resource
@@ -52,11 +54,40 @@ class NetworkRepository @Inject constructor(
     }
 
 
-    fun getTrendingMovies(): Flow<PagingData<Movie>>{
-         val config = PagingConfig(20, 4, true, 20)
+    fun getTrendingMovies(): Flow<PagingData<Movie>> {
+        val config = PagingConfig(20, 4, true, 20)
 
-        return Pager(config){
+        return Pager(config) {
             TrendingMoviePagingSource(networkService = networkService)
         }.flow
     }
+
+    fun getMovieDetails(movieId: Int) = flow<Resource<MovieDetails>> {
+
+        emit(Resource.Loading())
+        try {
+            val data=NetworkRequest.process {
+                networkService.getMovieDetails(apiKey = API_KEY, movie_id =  movieId)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results?: throw Exception("Error in movie details. ")
+                    }
+                    is ApiResponse.Failure -> {
+                        throw Exception("Error in movie details.")
+                    }
+                }
+            }
+
+            emit(Resource.Success(data = data))
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, message = e.localizedMessage))
+        }
+
+
+    }
+
+
 }
