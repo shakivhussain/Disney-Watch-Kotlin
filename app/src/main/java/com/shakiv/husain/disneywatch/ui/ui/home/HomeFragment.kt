@@ -70,16 +70,6 @@ class HomeFragment : BaseFragment() {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.layoutUpcomingMovie.recyclerView.adapter = trendingMovieAdapter
 
-//        binding.layoutPopularMovie.recyclerView.apply {
-//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            adapter = adapter
-//        }
-
-//        binding.layoutPopularMovie.recyclerView.apply {
-//            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-//            adapter = adapter
-//        }
-
         binding.root.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment)
         }
@@ -92,9 +82,6 @@ class HomeFragment : BaseFragment() {
 
     override fun bindObservers() {
         super.bindObservers()
-
-
-
 
         lifecycleScope.launch {
             movieViewModel.getTrendingMovies().collectLatest {
