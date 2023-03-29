@@ -31,7 +31,7 @@
 
 
     <include
-        android:id="@+id/layoutUpcomingMovie"
+        android:id="@+id/layout_trending_movie"
         layout="@layout/layout_recycler"
         android:layout_width="match_parent"
         android:layout_marginTop="16dp"

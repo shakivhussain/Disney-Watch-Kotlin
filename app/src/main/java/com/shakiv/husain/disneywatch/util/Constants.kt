@@ -21,6 +21,7 @@ object Constants {
     // End Points
     const val POPULAR_MOVIES = "movie/popular"
     const val TOP_RATED_MOVIES = "movie/top_rated"
+    const val UPCOMING_MOVIES = "movie/upcoming"
 
 
 }

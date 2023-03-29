@@ -18,7 +18,7 @@ class UpcomingMoviePagingSource(val service: NetworkService) : PagingSource<Int,
         val key = params.key ?: 1
         return try {
             val data = NetworkRequest.process {
-                service.getPopularMovies(API_KEY, key)
+                service.getUpComingMovies(API_KEY, key)
             }.run {
 
                 when (this) {

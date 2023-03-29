@@ -33,7 +33,7 @@ class HomeFragment : BaseFragment() {
     lateinit var movieViewModel: MovieViewModel
 
     private lateinit var popularMoviesAdapter: MovieAdapter
-    private lateinit var trendingMovieAdapter: MovieAdapter
+    private lateinit var upcomingMovieAdapter: MovieAdapter
     private lateinit var sliderAdapter: SliderAdapter
     private lateinit var handler: Handler
 
@@ -74,12 +74,22 @@ class HomeFragment : BaseFragment() {
 
     }
 
-    private fun bindUpcomingMovies() {
+    private fun init() {
+        handler = Handler()
+        popularMoviesAdapter = MovieAdapter(){
 
-        binding.layoutUpcomingMovie.apply {
+        }
+        upcomingMovieAdapter = MovieAdapter(){
+
+        }
+        sliderAdapter = SliderAdapter()
+    }
+
+    private fun bindUpcomingMovies() {
+        binding.layoutTrendingMovie.apply {
             recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            recyclerView.adapter = trendingMovieAdapter
+            recyclerView.adapter = upcomingMovieAdapter
             tvHeading.text = context?.resources?.getString(R.string.upcoming_movies)
         }
     }
@@ -111,8 +121,11 @@ class HomeFragment : BaseFragment() {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    handler.removeCallbacks(update)
-                    handler.postDelayed(update, 2000)
+
+                    if (handler!=null){
+                        handler.removeCallbacks(update)
+                        handler.postDelayed(update, 2000)
+                    }
                 }
             })
         }
@@ -127,7 +140,13 @@ class HomeFragment : BaseFragment() {
 
         lifecycleScope.launch {
             movieViewModel.getTrendingMovies().collectLatest {
-                trendingMovieAdapter.submitData(it)
+                sliderAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            movieViewModel.getUpComingMovies().collectLatest {
+                upcomingMovieAdapter.submitData(it)
             }
         }
 
@@ -154,12 +173,7 @@ class HomeFragment : BaseFragment() {
         handler.removeCallbacks(update)
     }
 
-    private fun init() {
-        handler = Handler()
-        popularMoviesAdapter = MovieAdapter()
-        trendingMovieAdapter = MovieAdapter()
-        sliderAdapter = SliderAdapter()
-    }
+
 
     override fun initViewModels() {
         (this.activity?.application as DisneyApplication).appComponent.inject(this)

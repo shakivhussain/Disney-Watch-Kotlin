@@ -10,7 +10,10 @@ import com.shakiv.husain.disneywatch.databinding.LayoutVerticalMovieItemBinding
 import com.shakiv.husain.disneywatch.util.ImageUtils
 import com.shakiv.husain.disneywatch.util.convertToFullUrl
 
-class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHolder>(Comparator) {
+class MovieAdapter(
+    val onItemClicked: (Movie) -> Unit
+
+) : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalMovieViewHolder {
         val binding = LayoutVerticalMovieItemBinding.inflate(
@@ -31,6 +34,9 @@ class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHold
                 item?.poster_path
                 val imgUrl = item?.poster_path?.convertToFullUrl()
                 ImageUtils.setImage(imgUrl, binding.ivPoster)
+                root.setOnClickListener {
+                    onItemClicked.invoke(item ?: return@setOnClickListener)
+                }
             }
         }
 

@@ -11,9 +11,9 @@ object ImageUtils {
     fun setImage(img: String?, imageView: ImageView) {
         Glide.with(imageView).load(img)
             .fitCenter()
-            .placeholder(R.drawable.ic_launcher_background)
-            .fallback(R.drawable.ic_launcher_background) // Error Drawable
-            .error(R.drawable.ic_launcher_background)
+            .placeholder(R.drawable.ic_launcher_foreground)
+            .fallback(R.drawable.ic_launcher_foreground) // Error Drawable
+            .error(R.drawable.ic_launcher_foreground)
             .fitCenter()
             .skipMemoryCache(false)
             .into(imageView)
@@ -21,9 +21,9 @@ object ImageUtils {
 
     fun setImage(@DrawableRes res: Int?, imageView: ImageView) {
         Glide.with(imageView).load(res)
-            .placeholder(R.drawable.ic_launcher_background)
-            .fallback(R.drawable.ic_launcher_background) // Error Drawable
-            .error(R.drawable.ic_launcher_background)
+            .placeholder(R.drawable.ic_launcher_foreground)
+            .fallback(R.drawable.ic_launcher_foreground) // Error Drawable
+            .error(R.drawable.ic_launcher_foreground)
             .fitCenter()
             .skipMemoryCache(false)
             .into(imageView)

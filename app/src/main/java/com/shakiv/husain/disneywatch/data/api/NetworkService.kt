@@ -7,6 +7,7 @@ import com.shakiv.husain.disneywatch.util.Constants.KEY_API
 import com.shakiv.husain.disneywatch.util.Constants.KEY_PAGE
 import com.shakiv.husain.disneywatch.util.Constants.POPULAR_MOVIES
 import com.shakiv.husain.disneywatch.util.Constants.TOP_RATED_MOVIES
+import com.shakiv.husain.disneywatch.util.Constants.UPCOMING_MOVIES
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -26,6 +27,12 @@ interface NetworkService {
         @Query(KEY_PAGE) page: Int = 1
     ): Response<BaseResponse<List<Movie>>>
 
+
+    @GET(UPCOMING_MOVIES)
+    suspend fun getUpComingMovies(
+        @Query(KEY_API) apiKey: String,
+        @Query(KEY_PAGE) page: Int = 1
+    ):Response<BaseResponse<List<Movie>>>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
