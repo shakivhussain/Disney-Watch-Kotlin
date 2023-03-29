@@ -2,29 +2,30 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvHeading"
-        style="@style/HeadingSemiBold_26"
+        style="@style/HeadingSemiBold_16"
         android:layout_width="wrap_content"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:text="@string/tranding"
-        android:textSize="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvSubHeading"
-        style="@style/SubHeading_16"
         android:layout_width="wrap_content"
+        style="@style/HeadingSemiBold_16"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
         android:text="See All"
-        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvHeading"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tvHeading" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

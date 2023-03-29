@@ -3,6 +3,7 @@
 
     // Primary
     <color name="colorPrimary">#B1060F</color>
+    <color name="colorPrimarySecond">#e50914</color>
     <color name="colorSecondary">#D22F26</color>
     <color name="colorLight">#DF7375</color>
 

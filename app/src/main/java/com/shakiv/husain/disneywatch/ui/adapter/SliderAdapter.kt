@@ -6,34 +6,37 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
-import com.shakiv.husain.disneywatch.databinding.LayoutVerticalMovieItemBinding
+import com.shakiv.husain.disneywatch.databinding.LayoutSliderItemBinding
+import com.shakiv.husain.disneywatch.util.Constants.BASE_URL_WITH_ORIGINAL
 import com.shakiv.husain.disneywatch.util.ImageUtils
-import com.shakiv.husain.disneywatch.util.convertToFullUrl
 
-class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHolder>(Comparator) {
+class SliderAdapter : PagingDataAdapter<Movie, SliderAdapter.SliderViewHolder>(Comparator) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalMovieViewHolder {
-        val binding = LayoutVerticalMovieItemBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderViewHolder {
+
+        val binding = LayoutSliderItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return VerticalMovieViewHolder(binding)
+        return SliderViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: VerticalMovieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SliderViewHolder, position: Int) {
         holder.bind(position)
     }
 
-    inner class VerticalMovieViewHolder(val binding: LayoutVerticalMovieItemBinding) :
+
+    inner class SliderViewHolder(private val binding: LayoutSliderItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
         fun bind(position: Int) {
             val item = getItem(position)
-            binding.apply {
-                item?.poster_path
-                val imgUrl = item?.poster_path?.convertToFullUrl()
-                ImageUtils.setImage(imgUrl, binding.ivPoster)
-            }
-        }
 
+            val imageUrl = "${BASE_URL_WITH_ORIGINAL+item?.poster_path}"
+
+            ImageUtils.setImage(imageUrl, binding.ivPoster)
+
+
+        }
     }
 
 
@@ -46,4 +49,7 @@ class MovieAdapter : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHold
             return false
         }
     }
+
+
+
 }
