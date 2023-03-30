@@ -28,6 +28,14 @@
         <item name="android:textColor">?colorHeading</item>
     </style>
 
+    <style name="HeadingItalicLight_16">
+        <item name="font">@font/extra_light_italic</item>
+        <item name="android:textSize">@dimen/textSize20</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textColor">?colorHeading</item>
+    </style>
+
     <style name="HeadingSemiBold_16">
         <item name="font">@font/bold</item>
         <item name="android:textSize">@dimen/textSize16</item>
@@ -64,5 +72,14 @@
         <item name="cornerSize">10%</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/lightGrey</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
 
+    <style name="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">?colorBackgroundPrimary</item>
+    </style>
 </resources>

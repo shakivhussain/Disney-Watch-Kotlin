@@ -6,15 +6,17 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.databinding.LayoutHorizontalSliderItemBinding
 import com.shakiv.husain.disneywatch.databinding.LayoutSliderItemBinding
 import com.shakiv.husain.disneywatch.util.Constants.BASE_URL_WITH_ORIGINAL
 import com.shakiv.husain.disneywatch.util.ImageUtils
 
-class SliderAdapter : PagingDataAdapter<Movie, SliderAdapter.SliderViewHolder>(Comparator) {
+class HorizontalSliderAdapter :
+    PagingDataAdapter<Movie, HorizontalSliderAdapter.SliderViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderViewHolder {
 
-        val binding = LayoutSliderItemBinding.inflate(
+        val binding = LayoutHorizontalSliderItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
         return SliderViewHolder(binding)
@@ -25,16 +27,16 @@ class SliderAdapter : PagingDataAdapter<Movie, SliderAdapter.SliderViewHolder>(C
     }
 
 
-    inner class SliderViewHolder(private val binding: LayoutSliderItemBinding) :
+    inner class SliderViewHolder(private val binding: LayoutHorizontalSliderItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(position: Int) {
             val item = getItem(position)
-
-            val imageUrl = "${BASE_URL_WITH_ORIGINAL+item?.poster_path}"
-
+            val imageUrl = "${BASE_URL_WITH_ORIGINAL + item?.backdrop_path}"
             ImageUtils.setImage(imageUrl, binding.ivPoster)
 
+            binding.tvMovieName.text = item?.title?:""
+            binding.tvDate.text = item?.release_date?:""
 
         }
     }
@@ -49,7 +51,6 @@ class SliderAdapter : PagingDataAdapter<Movie, SliderAdapter.SliderViewHolder>(C
             return false
         }
     }
-
 
 
 }

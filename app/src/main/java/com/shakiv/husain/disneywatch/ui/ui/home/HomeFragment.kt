@@ -5,6 +5,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +17,9 @@ import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
-import com.shakiv.husain.disneywatch.ui.adapter.SliderAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +36,8 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var popularMoviesAdapter: MovieAdapter
     private lateinit var upcomingMovieAdapter: MovieAdapter
-    private lateinit var sliderAdapter: SliderAdapter
+    private lateinit var horizontalAdapter: HorizontalSliderAdapter
+    private lateinit var verticalSliderAdapter: VerticalSliderAdapter
     private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +70,7 @@ class HomeFragment : BaseFragment() {
         bindBannerSlider()
         bindPopularMovies()
         bindUpcomingMovies()
+        bindNewMovies()
 
         binding.root.setOnClickListener {
 //            findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment)
@@ -74,19 +78,50 @@ class HomeFragment : BaseFragment() {
 
     }
 
+    private fun bindNewMovies() {
+        binding.viewPagerBottom.viewPager.apply {
+            (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
+            adapter = horizontalAdapter
+
+            binding.viewPager.setPageTransformer(getCompositePageTransformer())
+
+            clipToPadding = false
+            clipChildren = false
+            offscreenPageLimit = 3
+            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+
+                    if (handler != null) {
+                        handler.removeCallbacks(update)
+                        handler.postDelayed(update, 2000)
+                    }
+                }
+            })
+        }
+
+    }
+
     private fun init() {
         handler = Handler()
-        popularMoviesAdapter = MovieAdapter(){
+        popularMoviesAdapter = MovieAdapter() {
 
         }
-        upcomingMovieAdapter = MovieAdapter(){
+        upcomingMovieAdapter = MovieAdapter() {
 
         }
-        sliderAdapter = SliderAdapter()
+
+        horizontalAdapter = HorizontalSliderAdapter()
+
+        verticalSliderAdapter = VerticalSliderAdapter()
     }
 
     private fun bindUpcomingMovies() {
         binding.layoutTrendingMovie.apply {
+            recyclerView.isNestedScrollingEnabled = false
+            ViewCompat.setNestedScrollingEnabled(recyclerView, false);
+
             recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = upcomingMovieAdapter
@@ -96,6 +131,9 @@ class HomeFragment : BaseFragment() {
 
     private fun bindPopularMovies() {
         binding.layoutPopularMovie.apply {
+            recyclerView.isNestedScrollingEnabled = false
+            ViewCompat.setNestedScrollingEnabled(recyclerView, false);
+
             recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             recyclerView.adapter = popularMoviesAdapter
@@ -106,14 +144,10 @@ class HomeFragment : BaseFragment() {
     private fun bindBannerSlider() {
         binding.viewPager.apply {
             (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
-            adapter = sliderAdapter
-            val compositePageTransformer = CompositePageTransformer()
-            compositePageTransformer.addTransformer(MarginPageTransformer(40))
-            compositePageTransformer.addTransformer { page: View, position: Float ->
-                val r = 1 - abs(position)
-                page.scaleY = 0.85f + r * 0.15f
-            }
-            binding.viewPager.setPageTransformer(compositePageTransformer)
+            adapter = verticalSliderAdapter
+
+            binding.viewPager.setPageTransformer(getCompositePageTransformer())
+
             clipToPadding = false
             clipChildren = false
             offscreenPageLimit = 3
@@ -122,7 +156,7 @@ class HomeFragment : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (handler!=null){
+                    if (handler != null) {
                         handler.removeCallbacks(update)
                         handler.postDelayed(update, 2000)
                     }
@@ -140,13 +174,19 @@ class HomeFragment : BaseFragment() {
 
         lifecycleScope.launch {
             movieViewModel.getTrendingMovies().collectLatest {
-                sliderAdapter.submitData(it)
+                verticalSliderAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
             movieViewModel.getUpComingMovies().collectLatest {
                 upcomingMovieAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            movieViewModel.getUpComingMovies().collectLatest {
+                horizontalAdapter.submitData(it)
             }
         }
 
@@ -161,11 +201,19 @@ class HomeFragment : BaseFragment() {
 
     var update = Runnable {
         var currentPage = binding.viewPager.currentItem
+        var horizontalCurrentPage = binding.viewPagerBottom.viewPager.currentItem
         currentPage += 1
-        if (currentPage == sliderAdapter.itemCount) {
+        horizontalCurrentPage += 1
+
+        if (horizontalCurrentPage == horizontalAdapter.itemCount) {
+            horizontalCurrentPage = 0
+        }
+
+        if (currentPage == verticalSliderAdapter.itemCount) {
             currentPage = 0
         }
         binding.viewPager.setCurrentItem(currentPage, true)
+        binding.viewPagerBottom.viewPager.setCurrentItem(horizontalCurrentPage, true)
     }
 
     override fun onDestroy() {
@@ -173,6 +221,19 @@ class HomeFragment : BaseFragment() {
         handler.removeCallbacks(update)
     }
 
+
+    private fun getCompositePageTransformer(): CompositePageTransformer {
+        val compositePageTransformer = CompositePageTransformer()
+        compositePageTransformer.addTransformer(MarginPageTransformer(40))
+        compositePageTransformer.addTransformer { page: View, position: Float ->
+            val r = 1 - abs(position)
+            page.scaleY = 0.85f + r * 0.15f
+        }
+
+
+        return compositePageTransformer
+
+    }
 
 
     override fun initViewModels() {
