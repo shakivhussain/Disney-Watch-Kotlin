@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -20,6 +21,8 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
+import com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails.ViewDetailsFragment
+import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -72,8 +75,15 @@ class HomeFragment : BaseFragment() {
         bindUpcomingMovies()
         bindNewMovies()
 
-        binding.root.setOnClickListener {
-//            findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment)
+        binding.layoutPopularMovie.root.setOnClickListener {
+
+            val id = "34g543ugh4vj4"
+            val bundle = Bundle()
+            bundle.putString(ID, id)
+
+//            ViewDetailsFragment.open(findNavController(),"")
+            findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
+
         }
 
     }
@@ -103,17 +113,14 @@ class HomeFragment : BaseFragment() {
 
     }
 
+
     private fun init() {
         handler = Handler()
         popularMoviesAdapter = MovieAdapter() {
-
         }
         upcomingMovieAdapter = MovieAdapter() {
-
         }
-
         horizontalAdapter = HorizontalSliderAdapter()
-
         verticalSliderAdapter = VerticalSliderAdapter()
     }
 

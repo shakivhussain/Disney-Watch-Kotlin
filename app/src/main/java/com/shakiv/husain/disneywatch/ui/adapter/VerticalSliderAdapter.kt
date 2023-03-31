@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.databinding.LayoutSliderItemBinding
-import com.shakiv.husain.disneywatch.util.Constants.BASE_URL_WITH_ORIGINAL
+import com.shakiv.husain.disneywatch.util.ApiConstants.BASE_URL_WITH_ORIGINAL
 import com.shakiv.husain.disneywatch.util.ImageUtils
 
 class VerticalSliderAdapter : PagingDataAdapter<Movie, VerticalSliderAdapter.SliderViewHolder>(Comparator) {

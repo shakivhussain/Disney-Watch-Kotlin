@@ -1,6 +1,6 @@
 package com.shakiv.husain.disneywatch.util
 
-object Constants {
+object ApiConstants {
 
 
     const val BASE_URL = "https://api.themoviedb.org/3/"

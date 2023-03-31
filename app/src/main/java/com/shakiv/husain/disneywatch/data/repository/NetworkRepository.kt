@@ -1,6 +1,5 @@
 package com.shakiv.husain.disneywatch.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -13,7 +12,7 @@ import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.ui.paging.PopularMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.TrendingMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.UpcomingMoviePagingSource
-import com.shakiv.husain.disneywatch.util.Constants.API_KEY
+import com.shakiv.husain.disneywatch.util.ApiConstants.API_KEY
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

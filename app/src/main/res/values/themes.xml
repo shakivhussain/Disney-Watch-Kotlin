@@ -8,12 +8,12 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondary</item>
-        <item name="colorOnSecondary">@color/colorBlack</item>
+        <item name="colorOnSecondary">@color/darkBlue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
 
-        <item name="colorBackgroundPrimary">@color/headerWhite</item>
+        <item name="colorBackgroundPrimary">@color/darkWhite</item>
         <item name="colorHeading">@color/blackLight</item>
         <item name="colorDarkGrayToLightGray">#989898</item>
 

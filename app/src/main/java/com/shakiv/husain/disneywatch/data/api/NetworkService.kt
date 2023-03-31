@@ -3,11 +3,11 @@ package com.shakiv.husain.disneywatch.data.api
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
-import com.shakiv.husain.disneywatch.util.Constants.KEY_API
-import com.shakiv.husain.disneywatch.util.Constants.KEY_PAGE
-import com.shakiv.husain.disneywatch.util.Constants.POPULAR_MOVIES
-import com.shakiv.husain.disneywatch.util.Constants.TOP_RATED_MOVIES
-import com.shakiv.husain.disneywatch.util.Constants.UPCOMING_MOVIES
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_PAGE
+import com.shakiv.husain.disneywatch.util.ApiConstants.POPULAR_MOVIES
+import com.shakiv.husain.disneywatch.util.ApiConstants.TOP_RATED_MOVIES
+import com.shakiv.husain.disneywatch.util.ApiConstants.UPCOMING_MOVIES
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

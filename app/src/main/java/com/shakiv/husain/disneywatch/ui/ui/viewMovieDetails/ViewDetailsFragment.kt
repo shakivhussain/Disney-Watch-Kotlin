@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import com.shakiv.husain.disneywatch.DisneyApplication
+import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,7 +32,6 @@ class ViewDetailsFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModels()
-
     }
 
     override fun onCreateView(
@@ -50,6 +52,9 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindViews() {
         super.bindViews()
+        val id = arguments?.getString(ID) ?: ""
+
+
     }
 
     override fun bindListeners() {
@@ -81,6 +86,26 @@ class ViewDetailsFragment : BaseFragment() {
 
         (activity?.application as DisneyApplication).appComponent.inject(this)
         viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+
+    }
+
+
+    companion object {
+
+
+        fun open(navController: NavController, id: String) {
+            val id = getArgs(id)
+            navigation(navController, id)
+        }
+
+        fun getArgs(id: String) = Bundle().apply {
+            putSerializable(ID, id)
+        }
+
+        private fun navigation(controller: NavController, bundle: Bundle) {
+            controller.navigate(R.id.action_global_viewDetails,bundle)
+
+        }
 
     }
 

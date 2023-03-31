@@ -36,6 +36,8 @@
         <item name="android:textColor">?colorHeading</item>
     </style>
 
+
+
     <style name="HeadingSemiBold_16">
         <item name="font">@font/bold</item>
         <item name="android:textSize">@dimen/textSize16</item>

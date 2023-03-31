@@ -14,11 +14,19 @@
             android:id="@+id/action_homeFragment_to_viewDetailsFragment"
             app:destination="@id/viewDetailsFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/viewDetailsFragment"
         android:name="com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails.ViewDetailsFragment"
         android:label="ViewDetailsFragment"
-        tools:layout="@layout/fragment_view_details" />
+        tools:layout="@layout/fragment_view_details">
+
+    </fragment>
+
+
+    <action
+        android:id="@+id/action_global_viewDetails"
+        app:destination="@id/viewDetailsFragment" />
 
 
 </navigation>

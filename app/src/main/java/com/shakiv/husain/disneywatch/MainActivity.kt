@@ -14,9 +14,11 @@ class MainActivity : AppCompatActivity() {
         bindings = ActivityMainBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-
+        hideActionBar()
     }
-
+    private fun hideActionBar() {
+        (this as AppCompatActivity).supportActionBar?.hide()
+    }
     private fun initViewModel() {
 //        (application as DisneyApplication).appComponent.inject(this)
 //        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]

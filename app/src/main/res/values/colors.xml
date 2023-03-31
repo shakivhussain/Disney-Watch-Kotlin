@@ -14,16 +14,17 @@
     <color name="colorDarkGrey2">#292929</color>
     <color name="colorDarkGrey1">#575757</color>
     <color name="colorGrey">#737373</color>
+    <color name="darkBlue">#282647</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="color_white_85">#D9FFFFFF</color>
-
     <color name="colorGreyLight3">#E6E6E6</color>
     <color name="colorGreyLight2">#CBCBCB</color>
     <color name="colorGreyLight1">#B2B2B2</color>
     <color name="headerWhite">#FAFAFA</color>
     <color name="blackLight">#2C3135</color>
     <color name="lightGrey">#586470</color>
+    <color name="darkWhite">#f2f1e2</color>
 
     <color name="transparent">#00000000</color>
 
