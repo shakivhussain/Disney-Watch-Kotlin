@@ -6,7 +6,7 @@ data class Movie(
     @SerializedName("adult") val adult: Boolean? = false,
     @SerializedName("backdrop_path") val backdrop_path: String? = "",
     @SerializedName("genre_ids") val genre_ids: List<Int>? = emptyList(),
-    @SerializedName("id") val id: Int? = 0,
+    @SerializedName("id") val id: String? = "",
     @SerializedName("original_language") val original_language: String? = "",
     @SerializedName("original_title") val original_title: String? = "",
     @SerializedName("overview") val overview: String? = "",

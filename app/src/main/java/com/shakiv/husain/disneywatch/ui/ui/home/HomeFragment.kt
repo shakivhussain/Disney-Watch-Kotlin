@@ -2,6 +2,7 @@ package com.shakiv.husain.disneywatch.ui.ui.home
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +17,12 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
-import com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails.ViewDetailsFragment
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,8 +47,8 @@ class HomeFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        init()
         initViewModels()
+        init()
 
     }
 
@@ -81,7 +82,6 @@ class HomeFragment : BaseFragment() {
             val bundle = Bundle()
             bundle.putString(ID, id)
 
-//            ViewDetailsFragment.open(findNavController(),"")
             findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
 
         }
@@ -116,13 +116,22 @@ class HomeFragment : BaseFragment() {
 
     private fun init() {
         handler = Handler()
-        popularMoviesAdapter = MovieAdapter() {
-        }
-        upcomingMovieAdapter = MovieAdapter() {
-        }
+        popularMoviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
+
+        upcomingMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
         horizontalAdapter = HorizontalSliderAdapter()
         verticalSliderAdapter = VerticalSliderAdapter()
+
+        bindApiObservers()
     }
+
+    private fun onItemClicked(movie: String) {
+
+
+        Log.d("TAGOnItemClicked", "onItemClicked: $movie")
+
+    }
+
 
     private fun bindUpcomingMovies() {
         binding.layoutTrendingMovie.apply {
@@ -176,7 +185,7 @@ class HomeFragment : BaseFragment() {
         super.bindListeners()
     }
 
-    override fun bindObservers() {
+    private fun bindApiObservers() {
         super.bindObservers()
 
         lifecycleScope.launch {
@@ -240,6 +249,10 @@ class HomeFragment : BaseFragment() {
 
         return compositePageTransformer
 
+    }
+
+    override fun bindObservers() {
+        super.bindObservers()
     }
 
 

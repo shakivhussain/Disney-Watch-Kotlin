@@ -11,37 +11,47 @@ import com.shakiv.husain.disneywatch.util.ImageUtils
 import com.shakiv.husain.disneywatch.util.convertToFullUrl
 
 class MovieAdapter(
-    val onItemClicked: (Movie) -> Unit
-
+    private val onItemClicked: (String) -> Unit
 ) : PagingDataAdapter<Movie, MovieAdapter.VerticalMovieViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VerticalMovieViewHolder {
         val binding = LayoutVerticalMovieItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return VerticalMovieViewHolder(binding)
+        return VerticalMovieViewHolder(binding, onItemClicked)
     }
 
     override fun onBindViewHolder(holder: VerticalMovieViewHolder, position: Int) {
         holder.bind(position)
     }
 
-    inner class VerticalMovieViewHolder(val binding: LayoutVerticalMovieItemBinding) :
+    inner class VerticalMovieViewHolder(
+        val binding: LayoutVerticalMovieItemBinding, onItemClicked: (String) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(position: Int) {
-            val item = getItem(position)
-            binding.apply {
-                item?.poster_path
-                val imgUrl = item?.poster_path?.convertToFullUrl()
-                ImageUtils.setImage(imgUrl, binding.ivPoster)
+        private var _movie: Movie? = null
+
+        init {
+            with(binding) {
                 root.setOnClickListener {
-                    onItemClicked.invoke(item ?: return@setOnClickListener)
+                    _movie?.id?.let { id ->
+                        onItemClicked.invoke(id)
+                    }
                 }
             }
         }
 
-    }
+        fun bind(position: Int) {
+            val item = getItem(position)
+            _movie = item
+            binding.apply {
+                item?.poster_path
+                val imgUrl = item?.poster_path?.convertToFullUrl()
+                ImageUtils.setImage(imgUrl, binding.ivPoster)
+            }
+        }
 
+    }
 
     companion object Comparator : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
