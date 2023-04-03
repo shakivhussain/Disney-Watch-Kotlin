@@ -51,8 +51,15 @@ interface NetworkService {
 
     @GET("movie/{movie_id}/credits")
     suspend fun getCasts(
-        @Path("movie_id") movie_id : String,
+        @Path("movie_id") movie_id: String,
         @Query(KEY_API) apiKey: String
-    ) : Response<CastResponse>
+    ): Response<CastResponse>
+
+    @GET("movie/{movie_id}/recommendations")
+    suspend fun getRecommendedMovies(
+        @Path("movie_id") movie_id: String,
+        @Query(KEY_API) apiKey: String,
+        @Query(KEY_PAGE) page: Int?=1
+    ): Response<BaseResponse<List<Movie>>>
 
 }

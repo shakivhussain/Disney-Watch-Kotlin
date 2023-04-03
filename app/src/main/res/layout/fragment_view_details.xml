@@ -14,8 +14,8 @@
             android:id="@+id/topViewPager"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/_16sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/_16sdp"
             android:paddingTop="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -35,6 +34,7 @@
                 style="@style/HeadingItalicLight_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/_16sdp"
                 tools:text="@string/place_holder_name" />
 
 
@@ -43,6 +43,7 @@
                 style="@style/SubHeading_12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/_16sdp"
                 tools:text="@string/description" />
 
 
@@ -50,7 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/_16sdp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -134,21 +136,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:text="Cast" />
+                android:paddingHorizontal="@dimen/_16sdp"
+                android:text="Cast"
+                android:visibility="gone" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvCast"
+            <include
+                android:id="@+id/castLayout"
+                layout="@layout/layout_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" />
+
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/HeadingItalicLight_16"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
+                android:paddingHorizontal="@dimen/_16sdp"
                 android:text="Recommended for you" />
-
 
             <include
                 android:id="@+id/viewPagerBottom"

@@ -12,6 +12,7 @@ import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.ui.paging.PopularMoviePagingSource
+import com.shakiv.husain.disneywatch.ui.paging.RecommendedMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.TrendingMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.UpcomingMoviePagingSource
 import com.shakiv.husain.disneywatch.util.ApiConstants.API_KEY
@@ -67,6 +68,14 @@ class NetworkRepository @Inject constructor(
 
         return Pager(config) {
             TrendingMoviePagingSource(networkService = networkService)
+        }.flow
+    }
+
+
+    fun getRecommendedMovies(movieId: String): Flow<PagingData<Movie>> {
+        val config = PagingConfig(20, 4, false, 20)
+        return Pager(config = config) {
+            RecommendedMoviePagingSource(service = networkService, movieId = movieId)
         }.flow
     }
 

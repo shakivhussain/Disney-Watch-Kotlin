@@ -16,6 +16,7 @@ import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalImageAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
@@ -28,21 +29,22 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var binding: FragmentViewDetailsBinding
 
     private lateinit var viewModel: MovieViewModel
-
-    private lateinit var horizontalAdapter: HorizontalImageAdapter
+    private lateinit var horizontalImageAdapter: HorizontalImageAdapter
+    private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
 
     @Inject
     lateinit var factory: MainViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initViewModels()
+
         val id = arguments?.getString(ID) ?: ""
 
-        horizontalAdapter = HorizontalImageAdapter(::onImageClick)
-
+        initViewModels()
+        initAdapter()
         fetchMovieDetails(id)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -59,19 +61,29 @@ class ViewDetailsFragment : BaseFragment() {
         bindObservers()
     }
 
+    private fun initAdapter() {
+        horizontalImageAdapter = HorizontalImageAdapter(::onImageClick)
+        horizontalSliderAdapter = HorizontalSliderAdapter()
+    }
 
     override fun bindViews() {
         super.bindViews()
 
-
         binding.topViewPager.apply {
-            adapter = horizontalAdapter
+            adapter = horizontalImageAdapter
             clipToPadding = false
             clipChildren = false
-
-
         }
 
+        binding.viewPagerBottom.apply {
+            viewPager.adapter = horizontalSliderAdapter
+            viewPager.clipToPadding = false
+            viewPager.clipChildren = false
+        }
+
+
+        binding.castLayout.recyclerView.apply {
+        }
 
     }
 
@@ -91,13 +103,12 @@ class ViewDetailsFragment : BaseFragment() {
             }
         }
 
-
         lifecycleScope.launch {
             viewModel.getMovieImages(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val imageList = it.data?.images ?: emptyList()
-                        horizontalAdapter.submitList(imageList)
+                        horizontalImageAdapter.submitList(imageList)
                     }
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
@@ -105,18 +116,22 @@ class ViewDetailsFragment : BaseFragment() {
             }
         }
 
-
         lifecycleScope.launch {
             viewModel.getCasts(movieId = id).collectLatest {
 
                 when (it) {
                     is Resource.Success -> {
-                        val castList= it.data?.cast?: emptyList()
-
+                        val castList = it.data?.cast ?: emptyList()
                     }
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.getRecommended(id).collectLatest {
+                horizontalSliderAdapter.submitData(it)
             }
         }
     }
@@ -143,26 +158,23 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun initViewModels() {
         super.initViewModels()
-
         (activity?.application as DisneyApplication).appComponent.inject(this)
         viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
     }
 
     private fun onImageClick(image: Image) {
-
         Log.d("onImageClick", "onImageClick: $image")
     }
 
 
     companion object {
-
         fun open(navController: NavController, id: String) {
             val id = getArgs(id)
             navigation(navController, id)
         }
 
-        fun getArgs(id: String) = Bundle().apply {
+        private fun getArgs(id: String) = Bundle().apply {
             putSerializable(ID, id)
         }
 
