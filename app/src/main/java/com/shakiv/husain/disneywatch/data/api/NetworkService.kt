@@ -1,7 +1,9 @@
 package com.shakiv.husain.disneywatch.data.api
 
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
+import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_PAGE
@@ -32,13 +34,25 @@ interface NetworkService {
     suspend fun getUpComingMovies(
         @Query(KEY_API) apiKey: String,
         @Query(KEY_PAGE) page: Int = 1
-    ):Response<BaseResponse<List<Movie>>>
+    ): Response<BaseResponse<List<Movie>>>
 
     @GET("movie/{movie_id}")
     suspend fun getMovieDetails(
-        @Path("movie_id") movie_id: Int,
+        @Path("movie_id") movie_id: String,
         @Query(KEY_API) apiKey: String
     ): Response<MovieDetails>
 
+
+    @GET("movie/{movie_id}/images")
+    suspend fun getMovieImages(
+        @Path("movie_id") movie_id: String,
+        @Query(KEY_API) apiKey: String
+    ): Response<ImageResponse>
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getCasts(
+        @Path("movie_id") movie_id : String,
+        @Query(KEY_API) apiKey: String
+    ) : Response<CastResponse>
 
 }

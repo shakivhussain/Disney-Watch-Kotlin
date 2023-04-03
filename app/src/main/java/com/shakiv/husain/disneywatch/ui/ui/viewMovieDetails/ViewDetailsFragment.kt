@@ -10,9 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalImageAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
@@ -26,12 +29,19 @@ class ViewDetailsFragment : BaseFragment() {
 
     private lateinit var viewModel: MovieViewModel
 
+    private lateinit var horizontalAdapter: HorizontalImageAdapter
+
     @Inject
     lateinit var factory: MainViewModelFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModels()
+        val id = arguments?.getString(ID) ?: ""
+
+        horizontalAdapter = HorizontalImageAdapter(::onImageClick)
+
+        fetchMovieDetails(id)
     }
 
     override fun onCreateView(
@@ -52,9 +62,75 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindViews() {
         super.bindViews()
-        val id = arguments?.getString(ID) ?: ""
 
 
+        binding.topViewPager.apply {
+            adapter = horizontalAdapter
+            clipToPadding = false
+            clipChildren = false
+
+
+        }
+
+
+    }
+
+    private fun fetchMovieDetails(id: String) {
+
+        lifecycleScope.launch {
+            viewModel.getMovieDetails(id).collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        bindMovieDetailsData(it.data ?: return@collectLatest)
+                    }
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Failure -> {
+                    }
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            viewModel.getMovieImages(id).collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val imageList = it.data?.images ?: emptyList()
+                        horizontalAdapter.submitList(imageList)
+                    }
+                    is Resource.Loading -> {}
+                    is Resource.Failure -> {}
+                }
+            }
+        }
+
+
+        lifecycleScope.launch {
+            viewModel.getCasts(movieId = id).collectLatest {
+
+                when (it) {
+                    is Resource.Success -> {
+                        val castList= it.data?.cast?: emptyList()
+
+                    }
+                    is Resource.Loading -> {}
+                    is Resource.Failure -> {}
+                }
+            }
+        }
+    }
+
+    private fun bindMovieDetailsData(movieDetails: MovieDetails) {
+        binding.apply {
+            movieDetails.let { movieDetails: MovieDetails ->
+                tvMovieName.text = movieDetails.title
+                tvMovieDesc.text = movieDetails.overview
+                tvStatus.text = movieDetails.status
+                tvVote.text = movieDetails.vote_average.toString()
+                tvReleaseDate.text = movieDetails.release_date
+            }
+        }
     }
 
     override fun bindListeners() {
@@ -63,22 +139,6 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindObservers() {
         super.bindObservers()
-
-        lifecycleScope.launch {
-            viewModel.getMovieDetails(233).collectLatest {
-                when (it) {
-                    is Resource.Success -> {
-                        Log.d("getMovieDetails", "Success : ${it.data}")
-                    }
-                    is Resource.Loading -> {
-                        Log.d("getMovieDetails", "Loading : ${it}")
-                    }
-                    is Resource.Failure -> {
-                        Log.d("getMovieDetails", "Failure : ${it.message}")
-                    }
-                }
-            }
-        }
     }
 
     override fun initViewModels() {
@@ -89,9 +149,13 @@ class ViewDetailsFragment : BaseFragment() {
 
     }
 
+    private fun onImageClick(image: Image) {
+
+        Log.d("onImageClick", "onImageClick: $image")
+    }
+
 
     companion object {
-
 
         fun open(navController: NavController, id: String) {
             val id = getArgs(id)
@@ -103,10 +167,9 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         private fun navigation(controller: NavController, bundle: Bundle) {
-            controller.navigate(R.id.action_global_viewDetails,bundle)
-
+            controller.navigate(R.id.action_global_viewDetails, bundle)
         }
-
     }
 
 }
+

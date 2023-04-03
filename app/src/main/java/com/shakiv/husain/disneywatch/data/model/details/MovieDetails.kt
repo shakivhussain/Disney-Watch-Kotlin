@@ -19,7 +19,7 @@ data class MovieDetails(
 //    @SerializedName("production_companies") val production_companies: List<ProductionCompany>,
 //    @SerializedName("production_countries") val production_countries: List<ProductionCountry>,
     @SerializedName("release_date") val release_date: String,
-    @SerializedName("revenue") val revenue: Int,
+    @SerializedName("revenue") val revenue: Float?=0f,
     @SerializedName("runtime") val runtime: Int,
 //    @SerializedName("spoken_languages") val spoken_languages: List<SpokenLanguage>,
     @SerializedName("status") val status: String,

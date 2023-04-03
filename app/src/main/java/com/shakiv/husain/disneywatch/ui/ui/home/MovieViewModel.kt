@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.data.repository.NetworkRepository
@@ -29,8 +31,17 @@ class MovieViewModel @Inject constructor(
         return repository.getUpcomingMovies()
     }
 
-    fun getMovieDetails(movieId: Int): Flow<Resource<MovieDetails>> {
+    fun getMovieDetails(movieId: String): Flow<Resource<MovieDetails>> {
         return repository.getMovieDetails(movieId = movieId)
+    }
+
+
+    fun getMovieImages(movieId: String) : Flow<Resource<ImageResponse>>{
+        return repository.getMovieImages(movieId)
+    }
+
+    fun getCasts(movieId: String): Flow<Resource<CastResponse>> {
+        return repository.getCasts(movieId)
     }
 
 }

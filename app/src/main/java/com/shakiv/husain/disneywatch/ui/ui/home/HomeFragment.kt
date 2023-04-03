@@ -2,6 +2,7 @@ package com.shakiv.husain.disneywatch.ui.ui.home
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,6 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
-import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
@@ -42,7 +42,7 @@ class HomeFragment : BaseFragment() {
     private lateinit var upcomingMovieAdapter: MovieAdapter
     private lateinit var horizontalAdapter: HorizontalSliderAdapter
     private lateinit var verticalSliderAdapter: VerticalSliderAdapter
-    private lateinit var handler: Handler
+    private lateinit var mainHandler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,17 +75,6 @@ class HomeFragment : BaseFragment() {
         bindPopularMovies()
         bindUpcomingMovies()
         bindNewMovies()
-
-        binding.layoutPopularMovie.root.setOnClickListener {
-
-            val id = "34g543ugh4vj4"
-            val bundle = Bundle()
-            bundle.putString(ID, id)
-
-            findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
-
-        }
-
     }
 
     private fun bindNewMovies() {
@@ -103,9 +92,9 @@ class HomeFragment : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (handler != null) {
-                        handler.removeCallbacks(update)
-                        handler.postDelayed(update, 2000)
+                    if (mainHandler != null) {
+                        mainHandler.removeCallbacks(update)
+                        mainHandler.postDelayed(update, 2000)
                     }
                 }
             })
@@ -115,7 +104,7 @@ class HomeFragment : BaseFragment() {
 
 
     private fun init() {
-        handler = Handler()
+        mainHandler = Handler(Looper.getMainLooper())
         popularMoviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
 
         upcomingMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
@@ -125,13 +114,21 @@ class HomeFragment : BaseFragment() {
         bindApiObservers()
     }
 
-    private fun onItemClicked(movie: String) {
+    private fun onItemClicked(movieId: String) {
 
+        val bundle = Bundle()
+        bundle.putString(ID, movieId)
 
-        Log.d("TAGOnItemClicked", "onItemClicked: $movie")
+        Log.d("onItemClicked", "onItemClicked: $movieId ")
+        findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
 
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        mainHandler.removeCallbacks(update)
+    }
 
     private fun bindUpcomingMovies() {
         binding.layoutTrendingMovie.apply {
@@ -208,7 +205,7 @@ class HomeFragment : BaseFragment() {
 
         lifecycleScope.launch {
             movieViewModel.getPopularMovies().collectLatest {
-                it?.let {
+                it.let {
                     popularMoviesAdapter.submitData(it)
                 }
             }
@@ -234,7 +231,7 @@ class HomeFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        handler.removeCallbacks(update)
+        mainHandler.removeCallbacks(update)
     }
 
 

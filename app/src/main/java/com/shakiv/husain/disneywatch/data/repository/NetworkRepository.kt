@@ -4,7 +4,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.shakiv.husain.disneywatch.data.api.NetworkService
+import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
@@ -53,9 +55,9 @@ class NetworkRepository @Inject constructor(
         }.flow
     }
 
-    fun getUpcomingMovies():Flow<PagingData<Movie>>{
-        val config = PagingConfig(20,4,true,20)
-        return Pager(config){
+    fun getUpcomingMovies(): Flow<PagingData<Movie>> {
+        val config = PagingConfig(20, 4, true, 20)
+        return Pager(config) {
             UpcomingMoviePagingSource(networkService)
         }.flow
     }
@@ -68,16 +70,16 @@ class NetworkRepository @Inject constructor(
         }.flow
     }
 
-    fun getMovieDetails(movieId: Int) = flow<Resource<MovieDetails>> {
+    fun getMovieDetails(movieId: String) = flow<Resource<MovieDetails>> {
 
         emit(Resource.Loading())
         try {
-            val data=NetworkRequest.process {
-                networkService.getMovieDetails(apiKey = API_KEY, movie_id =  movieId)
+            val data = NetworkRequest.process {
+                networkService.getMovieDetails(apiKey = API_KEY, movie_id = movieId)
             }.run {
                 when (this) {
                     is ApiResponse.Success -> {
-                        results?: throw Exception("Error in movie details. ")
+                        results ?: throw Exception("Error in movie details. ")
                     }
                     is ApiResponse.Failure -> {
                         throw Exception("Error in movie details.")
@@ -91,9 +93,55 @@ class NetworkRepository @Inject constructor(
             e.printStackTrace()
             emit(Resource.Failure(data = null, message = e.localizedMessage))
         }
-
-
     }
 
+
+    fun getMovieImages(movieId: String) = flow<Resource<ImageResponse>> {
+        emit(Resource.Loading())
+        try {
+            val data = NetworkRequest.process {
+                networkService.getMovieImages(movieId, apiKey = API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results ?: throw java.lang.Exception("Error in movies images.")
+                    }
+                    is ApiResponse.Failure -> {
+                        throw java.lang.Exception("Error in movies images.")
+                    }
+                }
+            }
+            emit(Resource.Success(data = data))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, message = e.localizedMessage))
+        }
+    }
+
+
+    fun getCasts(movieId: String) = flow<Resource<CastResponse>> {
+        emit(Resource.Loading())
+        try {
+            val data = NetworkRequest.process {
+                networkService.getCasts(movieId, API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results ?: throw Exception("Error in fetching casts.")
+                    }
+                    is ApiResponse.Failure -> {
+                        throw Exception("Error in fetching casts.")
+                    }
+                }
+            }
+
+            emit(Resource.Success(data = data))
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, message = e.localizedMessage))
+        }
+
+    }
 
 }

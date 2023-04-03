@@ -13,8 +13,9 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/topViewPager"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,16 +64,16 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="Status" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvDirectorName2"
+                        android:id="@+id/tvStatus"
                         style="@style/HeadingItalicLight_16"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="@string/dash" />
 
                 </LinearLayout>
 
@@ -88,16 +89,16 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="Vote" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvDirectorName3"
+                        android:id="@+id/tvVote"
                         style="@style/HeadingItalicLight_16"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="@string/dash" />
 
                 </LinearLayout>
 
@@ -113,16 +114,16 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="Release Date" />
 
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tvDirectorName4"
+                        android:id="@+id/tvReleaseDate"
                         style="@style/HeadingItalicLight_16"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="@dimen/_4sdp"
-                        tools:text="Director" />
+                        android:text="@string/dash" />
 
                 </LinearLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>

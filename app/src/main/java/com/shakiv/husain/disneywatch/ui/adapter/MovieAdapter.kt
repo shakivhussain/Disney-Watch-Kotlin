@@ -35,7 +35,7 @@ class MovieAdapter(
             with(binding) {
                 root.setOnClickListener {
                     _movie?.id?.let { id ->
-                        onItemClicked.invoke(id)
+                        onItemClicked.invoke(id.toString())
                     }
                 }
             }
