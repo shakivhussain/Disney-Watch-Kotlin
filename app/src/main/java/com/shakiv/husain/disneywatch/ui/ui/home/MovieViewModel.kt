@@ -18,7 +18,6 @@ class MovieViewModel @Inject constructor(
     private val repository: NetworkRepository
 ) : ViewModel() {
 
-
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return repository.getPopularMovies().cachedIn(viewModelScope)
     }

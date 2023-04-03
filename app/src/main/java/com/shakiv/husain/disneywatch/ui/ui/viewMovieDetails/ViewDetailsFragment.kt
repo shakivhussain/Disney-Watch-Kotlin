@@ -167,21 +167,5 @@ class ViewDetailsFragment : BaseFragment() {
         Log.d("onImageClick", "onImageClick: $image")
     }
 
-
-    companion object {
-        fun open(navController: NavController, id: String) {
-            val id = getArgs(id)
-            navigation(navController, id)
-        }
-
-        private fun getArgs(id: String) = Bundle().apply {
-            putSerializable(ID, id)
-        }
-
-        private fun navigation(controller: NavController, bundle: Bundle) {
-            controller.navigate(R.id.action_global_viewDetails, bundle)
-        }
-    }
-
 }
 
