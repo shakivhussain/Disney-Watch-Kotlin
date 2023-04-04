@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
@@ -15,15 +16,11 @@ import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
-import com.shakiv.husain.disneywatch.ui.adapter.CastAdapter
-import com.shakiv.husain.disneywatch.ui.adapter.HorizontalImageAdapter
-import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
-import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.*
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
-import com.shakiv.husain.disneywatch.util.getStringFromId
-import com.shakiv.husain.disneywatch.util.logd
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,6 +34,7 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
     private lateinit var castAdapter: CastAdapter
     private lateinit var recommendedMovieAdapter: MovieAdapter
+    private lateinit var videoAdapter : HorizontalVideoAdapter
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -72,6 +70,7 @@ class ViewDetailsFragment : BaseFragment() {
         horizontalSliderAdapter = HorizontalSliderAdapter()
         castAdapter = CastAdapter()
         recommendedMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
+        videoAdapter = HorizontalVideoAdapter(lifecycle)
     }
 
     private fun onItemClicked(id: String) {
@@ -83,6 +82,9 @@ class ViewDetailsFragment : BaseFragment() {
         val castTitle = getStringFromId(R.string.cast)
         val recommendedForYou = getStringFromId(R.string.recommended_for_you)
         val videos = getStringFromId(R.string.videos)
+
+
+
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
@@ -98,12 +100,18 @@ class ViewDetailsFragment : BaseFragment() {
             tvHeading.text = recommendedForYou
         }
 
-        binding.viewPagerBottom.apply {
-            viewPager.adapter = horizontalSliderAdapter
-            viewPager.clipToPadding = false
-            viewPager.clipChildren = false
-            tvHeading.isVisible = videos.isNotEmpty()
-            tvHeading.text = videos
+        binding.viewPagerBottom.viewPager.apply {
+            (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
+
+            adapter = videoAdapter
+            clipToPadding = false
+            clipChildren = false
+
+        }
+
+        binding.viewPagerBottom.tvHeading.apply {
+            isVisible = videos.isNotEmpty()
+            text = videos
         }
 
 
@@ -113,6 +121,11 @@ class ViewDetailsFragment : BaseFragment() {
             recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
+
+//        binding.viewPagerBottom.apply {
+//            viewPager.adapter= videoAdapter
+//            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
+//        }
 
     }
 
@@ -174,9 +187,12 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val previewResponse = it.data?.previewList ?: emptyList()
                         logd(previewResponse.toString())
+
+                        videoAdapter.submitList(previewResponse)
+
                     }
                     is Resource.Failure -> {}
-                }🚀
+                }
             }
         }
     }
@@ -189,6 +205,13 @@ class ViewDetailsFragment : BaseFragment() {
                 tvStatus.text = movieDetails.status
                 tvVote.text = movieDetails.vote_average.toString()
                 tvReleaseDate.text = movieDetails.release_date
+
+                tvTitle.text = movieDetails.title
+                tvRelease.text = movieDetails.status
+                tvReleaseDate.text = movieDetails.release_date
+                tvRevenue.text = movieDetails.revenue?.toKNotation()
+                ImageUtils.setImage(movieDetails.poster_path.convertToFullUrl(), layoutPoster.imageView)
+
             }
         }
     }
