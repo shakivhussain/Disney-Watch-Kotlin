@@ -18,8 +18,16 @@ fun Fragment.navigate(directions: Int, bundle: Bundle? = null) {
 }
 
 
-fun Fragment.getString(id:Int) : String{
+fun Fragment.getStringFromId(id:Int) : String{
     return resources.getString(id)
+}
+
+inline fun <reified T> T?.orThrow(message: String = "Object is null"): T {
+    return this ?: throw Exception(message)
+}
+
+fun throwError(message: String): Nothing {
+    throw Exception(message)
 }
 
 private fun Fragment.hideActionBar() {

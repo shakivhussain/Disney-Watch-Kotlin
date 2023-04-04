@@ -119,7 +119,6 @@ class HomeFragment : BaseFragment() {
         val bundle = Bundle()
         bundle.putString(ID, movieId)
 
-        Log.d("onItemClicked", "onItemClicked: $movieId ")
         findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
 
     }

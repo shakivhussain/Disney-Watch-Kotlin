@@ -8,10 +8,10 @@ import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.data.repository.NetworkRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class MovieViewModel @Inject constructor(
@@ -26,11 +26,11 @@ class MovieViewModel @Inject constructor(
         return repository.getTrendingMovies().cachedIn(viewModelScope)
     }
 
-    fun getUpComingMovies():Flow<PagingData<Movie>>{
+    fun getUpComingMovies(): Flow<PagingData<Movie>> {
         return repository.getUpcomingMovies()
     }
 
-    fun getRecommended(movieId: String):Flow<PagingData<Movie>>{
+    fun getRecommended(movieId: String): Flow<PagingData<Movie>> {
         return repository.getRecommendedMovies(movieId = movieId)
     }
 
@@ -39,12 +39,23 @@ class MovieViewModel @Inject constructor(
     }
 
 
-    fun getMovieImages(movieId: String) : Flow<Resource<ImageResponse>>{
+    fun getMovieImages(movieId: String): Flow<Resource<ImageResponse>> {
         return repository.getMovieImages(movieId)
     }
 
+    /**
+     * Retrieves the cast details of a movie identified by the given [movieId].
+     * @param movieId The ID of the movie to retrieve the cast details for.
+     * @return A flow of [Resource] that emits the cast details of the movie.
+     */
     fun getCasts(movieId: String): Flow<Resource<CastResponse>> {
         return repository.getCasts(movieId)
+    }
+
+
+
+    fun getMoviesPreview(movieId: String): Flow<Resource<MoviePreviewResponse>> {
+        return repository.getMovieVideos(movieId)
     }
 
 }
