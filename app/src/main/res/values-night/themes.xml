@@ -15,6 +15,7 @@
         <item name="colorBackgroundPrimary">@color/darkBlue</item>
         <item name="colorHeading">@color/headerWhite</item>
         <item name="colorDarkGrayToLightGray">#9098A1</item>
+        <item name="colorBlackToWhite">@color/colorBlack</item>
 
     </style>
 </resources>

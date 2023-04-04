@@ -4,5 +4,6 @@
     <attr name="colorHeading" format="color|reference" />
     <attr name="colorBackgroundPrimary" format="color"/>
     <attr name="colorDarkGrayToLightGray" format="color"/>
+    <attr name="colorBlackToWhite" format="color"></attr>
 
 </resources>

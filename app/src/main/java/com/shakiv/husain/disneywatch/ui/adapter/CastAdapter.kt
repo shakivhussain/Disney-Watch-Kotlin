@@ -30,9 +30,19 @@ class CastAdapter : ListAdapter<Cast, CastAdapter.CastViewHolder>(COMPARATOR) {
 
         fun bind(position: Int) {
             val item = getItem(position)
-
             val imageUrl = item.profile_path?.convertToFullUrl()?:""
-            ImageUtils.setProfileImage(imageUrl, binding.ivProfile)
+            val name = item.name.orEmpty()
+            val character = item.character.orEmpty()
+
+            binding.apply {
+                ImageUtils.setImage(imageUrl, binding.ivProfile)
+                tvName.text= name
+                tvChar.text = character
+            }
+
+
+
+
 
         }
 

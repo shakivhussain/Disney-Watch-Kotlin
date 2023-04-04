@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/topViewPager"
@@ -130,7 +131,6 @@
                 </LinearLayout>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/HeadingItalicLight_16"
                 android:layout_width="match_parent"
@@ -156,17 +156,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp" />
 
-
             <include
                 android:id="@+id/viewPagerBottom"
                 layout="@layout/layout_viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_trending_movie" />
-
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

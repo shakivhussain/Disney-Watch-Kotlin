@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.DisneyWatch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -13,10 +13,10 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
 
-        <item name="colorBackgroundPrimary">@color/darkWhite</item>
+        <item name="colorBackgroundPrimary">@color/headerWhite</item>
         <item name="colorHeading">@color/blackLight</item>
         <item name="colorDarkGrayToLightGray">#989898</item>
+        <item name="colorBlackToWhite">@color/headerWhite</item>
 
-        <!-- Customize your theme here. -->
     </style>
 </resources>
