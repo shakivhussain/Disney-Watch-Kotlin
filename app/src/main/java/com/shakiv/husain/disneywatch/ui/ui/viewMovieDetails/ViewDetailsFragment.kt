@@ -5,9 +5,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
@@ -15,8 +16,10 @@ import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
+import com.shakiv.husain.disneywatch.ui.adapter.CastAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalImageAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
@@ -31,6 +34,8 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var viewModel: MovieViewModel
     private lateinit var horizontalImageAdapter: HorizontalImageAdapter
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
+    private lateinit var castAdapter: CastAdapter
+    private lateinit var recommendedMovieAdapter: MovieAdapter
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -64,10 +69,19 @@ class ViewDetailsFragment : BaseFragment() {
     private fun initAdapter() {
         horizontalImageAdapter = HorizontalImageAdapter(::onImageClick)
         horizontalSliderAdapter = HorizontalSliderAdapter()
+        castAdapter = CastAdapter()
+        recommendedMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
     }
+
+    private fun onItemClicked(id: String) {
+    }
+
 
     override fun bindViews() {
         super.bindViews()
+        val castTitle = resources.getString(R.string.cast)
+        val recommendedForYou = getString(R.string.recommended_for_you)
+        val videos = getString(R.string.videos)
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
@@ -75,14 +89,28 @@ class ViewDetailsFragment : BaseFragment() {
             clipChildren = false
         }
 
+        binding.recommendedLayout.apply {
+            recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.adapter = recommendedMovieAdapter
+            tvHeading.isVisible = recommendedForYou.isNotEmpty()
+            tvHeading.text = recommendedForYou
+        }
+
         binding.viewPagerBottom.apply {
             viewPager.adapter = horizontalSliderAdapter
             viewPager.clipToPadding = false
             viewPager.clipChildren = false
+            tvHeading.isVisible = videos.isNotEmpty()
+            tvHeading.text = videos
         }
 
 
-        binding.castLayout.recyclerView.apply {
+        binding.castLayout.apply {
+            tvHeading.text = castTitle
+            recyclerView.adapter = castAdapter
+            recyclerView.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
 
     }
@@ -122,6 +150,7 @@ class ViewDetailsFragment : BaseFragment() {
                 when (it) {
                     is Resource.Success -> {
                         val castList = it.data?.cast ?: emptyList()
+                        castAdapter.submitList(castList)
                     }
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
@@ -131,7 +160,9 @@ class ViewDetailsFragment : BaseFragment() {
 
         lifecycleScope.launch {
             viewModel.getRecommended(id).collectLatest {
-                horizontalSliderAdapter.submitData(it)
+//                horizontalSliderAdapter.submitData(it)
+                recommendedMovieAdapter.submitData(it)
+
             }
         }
     }

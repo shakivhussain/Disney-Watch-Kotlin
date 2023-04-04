@@ -30,7 +30,7 @@
 
     <style name="HeadingItalicLight_16">
         <item name="font">@font/extra_light_italic</item>
-        <item name="android:textSize">@dimen/textSize20</item>
+        <item name="android:textSize">@dimen/textSize16</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
         <item name="android:textColor">?colorHeading</item>

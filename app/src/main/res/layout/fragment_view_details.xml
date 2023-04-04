@@ -145,17 +145,17 @@
                 android:id="@+id/castLayout"
                 layout="@layout/layout_recycler"
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_16sdp" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/HeadingItalicLight_16"
+
+            <include
+                android:id="@+id/recommendedLayout"
+                layout="@layout/layout_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_16sdp"
-                android:paddingHorizontal="@dimen/_16sdp"
-                android:text="Recommended for you" />
+                android:layout_marginTop="@dimen/_16sdp" />
+
 
             <include
                 android:id="@+id/viewPagerBottom"

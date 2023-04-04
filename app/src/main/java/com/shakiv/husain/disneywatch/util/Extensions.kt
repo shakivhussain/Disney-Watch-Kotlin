@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.shakiv.husain.disneywatch.data.network.Resource
 import timber.log.Timber
 
 fun String.convertToFullUrl(): String {
@@ -14,6 +15,11 @@ fun String.convertToFullUrl(): String {
 
 fun Fragment.navigate(directions: Int, bundle: Bundle? = null) {
     findNavController().navigate(directions, bundle)
+}
+
+
+fun Fragment.getString(id:Int) : String{
+    return resources.getString(id)
 }
 
 private fun Fragment.hideActionBar() {
