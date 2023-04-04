@@ -9,8 +9,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:paddingBottom="30dp">
+        android:layout_marginBottom="50dp"
+        android:fitsSystemWindows="true">
 
 
         <androidx.viewpager2.widget.ViewPager2
@@ -52,7 +52,7 @@
             android:id="@+id/viewPagerBottom"
             layout="@layout/layout_viewpager"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_16sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

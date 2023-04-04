@@ -4,5 +4,11 @@
     <attr name="colorHeading" format="color|reference" />
     <attr name="colorBackgroundPrimary" format="color"/>
     <attr name="colorDarkGrayToLightGray" format="color"/>
+    <attr name="colorBlackToWhite" format="color"/>
+    <attr name="subtitleColor" format="color"/>
+    <attr name="titleColor" format="color"/>
+    <attr name="electricPurple" format="color"/>
+    <attr name="brightSkyBlue" format="color"/>
+    <attr name="vibrantOrange" format="color"/>
 
 </resources>
