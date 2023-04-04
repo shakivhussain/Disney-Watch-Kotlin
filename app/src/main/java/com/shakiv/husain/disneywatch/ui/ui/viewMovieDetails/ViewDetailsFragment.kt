@@ -19,9 +19,8 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.*
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
-import com.shakiv.husain.disneywatch.util.getStringFromId
-import com.shakiv.husain.disneywatch.util.logd
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -83,6 +82,9 @@ class ViewDetailsFragment : BaseFragment() {
         val castTitle = getStringFromId(R.string.cast)
         val recommendedForYou = getStringFromId(R.string.recommended_for_you)
         val videos = getStringFromId(R.string.videos)
+
+
+
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
@@ -203,6 +205,13 @@ class ViewDetailsFragment : BaseFragment() {
                 tvStatus.text = movieDetails.status
                 tvVote.text = movieDetails.vote_average.toString()
                 tvReleaseDate.text = movieDetails.release_date
+
+                tvTitle.text = movieDetails.title
+                tvRelease.text = movieDetails.status
+                tvReleaseDate.text = movieDetails.release_date
+                tvRevenue.text = movieDetails.revenue?.toKNotation()
+                ImageUtils.setImage(movieDetails.poster_path.convertToFullUrl(), layoutPoster.imageView)
+
             }
         }
     }

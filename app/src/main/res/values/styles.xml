@@ -59,7 +59,7 @@
         <item name="android:textSize">@dimen/textSubHeading</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
-        <item name="android:textColor">@color/lightGrey</item>
+        <item name="android:textColor">?attr/subtitleColor</item>
     </style>
 
     <style name="SubHeading_16">
@@ -67,8 +67,9 @@
         <item name="android:textSize">@dimen/textSize18</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
-        <item name="android:textColor">?colorDarkGrayToLightGray</item>
+        <item name="android:textColor">?attr/subtitleColor</item>
     </style>
+
 
 
     <style name="SubHeading_14">
@@ -76,7 +77,7 @@
         <item name="android:textSize">@dimen/textSize14</item>
         <item name="android:lineSpacingExtra">8sp</item>
         <item name="android:letterSpacing">0.02</item>
-        <item name="android:textColor">?colorDarkGrayToLightGray</item>
+        <item name="android:textColor">?attr/subtitleColor</item>
     </style>
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">10%</item>

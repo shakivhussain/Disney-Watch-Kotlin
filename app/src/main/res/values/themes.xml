@@ -17,6 +17,12 @@
         <item name="colorHeading">@color/blackLight</item>
         <item name="colorDarkGrayToLightGray">#989898</item>
         <item name="colorBlackToWhite">@color/headerWhite</item>
-
+        <item name="subtitleColor">@color/lightSilverSubtitle</item>
+        <item name="titleColor">@color/darkGrayTitle</item>
+        <item name="electricPurple">@color/electricPurpleLight</item>
+        <item name="brightSkyBlue">@color/brightSkyBlueLight</item>
+        <item name="vibrantOrange">@color/vibrantOrangeLight</item>
     </style>
+
+
 </resources>
