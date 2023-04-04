@@ -1,11 +1,15 @@
 package com.shakiv.husain.disneywatch.data.api
 
+import android.media.tv.TvContract.PreviewPrograms
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
 import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID_PATH
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_PAGE
 import com.shakiv.husain.disneywatch.util.ApiConstants.POPULAR_MOVIES
 import com.shakiv.husain.disneywatch.util.ApiConstants.TOP_RATED_MOVIES
@@ -36,30 +40,37 @@ interface NetworkService {
         @Query(KEY_PAGE) page: Int = 1
     ): Response<BaseResponse<List<Movie>>>
 
-    @GET("movie/{movie_id}")
+    @GET("movie/{$KEY_MOVIE_ID_PATH}")
     suspend fun getMovieDetails(
-        @Path("movie_id") movie_id: String,
+        @Path(KEY_MOVIE_ID) movie_id: String,
         @Query(KEY_API) apiKey: String
     ): Response<MovieDetails>
 
 
-    @GET("movie/{movie_id}/images")
+    @GET("movie/{$KEY_MOVIE_ID_PATH}/images")
     suspend fun getMovieImages(
-        @Path("movie_id") movie_id: String,
+        @Path(KEY_MOVIE_ID) movie_id: String,
         @Query(KEY_API) apiKey: String
     ): Response<ImageResponse>
 
-    @GET("movie/{movie_id}/credits")
+    @GET("movie/{$KEY_MOVIE_ID_PATH}/credits")
     suspend fun getCasts(
-        @Path("movie_id") movie_id: String,
+        @Path(KEY_MOVIE_ID) movie_id: String,
         @Query(KEY_API) apiKey: String
     ): Response<CastResponse>
 
-    @GET("movie/{movie_id}/recommendations")
+    @GET("movie/{$KEY_MOVIE_ID_PATH}/recommendations")
     suspend fun getRecommendedMovies(
-        @Path("movie_id") movie_id: String,
+        @Path(KEY_MOVIE_ID) movie_id: String,
         @Query(KEY_API) apiKey: String,
-        @Query(KEY_PAGE) page: Int?=1
+        @Query(KEY_PAGE) page: Int? = 1
     ): Response<BaseResponse<List<Movie>>>
+
+    @GET("movie/{$KEY_MOVIE_ID_PATH}/videos")
+    suspend fun getMovieVideos(
+        @Path(KEY_MOVIE_ID) movie_id: String,
+        @Query(KEY_API) apiKey: String,
+        @Query(KEY_PAGE) page: Int? = 1
+    ) : Response<MoviePreviewResponse>
 
 }

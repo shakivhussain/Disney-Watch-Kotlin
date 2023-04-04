@@ -1,7 +1,6 @@
 package com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,8 @@ import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.getStringFromId
+import com.shakiv.husain.disneywatch.util.logd
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -79,9 +80,9 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindViews() {
         super.bindViews()
-        val castTitle = resources.getString(R.string.cast)
-        val recommendedForYou = getString(R.string.recommended_for_you)
-        val videos = getString(R.string.videos)
+        val castTitle = getStringFromId(R.string.cast)
+        val recommendedForYou = getStringFromId(R.string.recommended_for_you)
+        val videos = getStringFromId(R.string.videos)
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
@@ -160,9 +161,22 @@ class ViewDetailsFragment : BaseFragment() {
 
         lifecycleScope.launch {
             viewModel.getRecommended(id).collectLatest {
-//                horizontalSliderAdapter.submitData(it)
                 recommendedMovieAdapter.submitData(it)
 
+            }
+        }
+
+
+        lifecycleScope.launch {
+            viewModel.getMoviesPreview(id).collectLatest {
+                when (it) {
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        val previewResponse = it.data?.previewList ?: emptyList()
+                        logd(previewResponse.toString())
+                    }
+                    is Resource.Failure -> {}
+                }🚀
             }
         }
     }
@@ -195,7 +209,6 @@ class ViewDetailsFragment : BaseFragment() {
     }
 
     private fun onImageClick(image: Image) {
-        Log.d("onImageClick", "onImageClick: $image")
     }
 
 }

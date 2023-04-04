@@ -8,6 +8,7 @@ import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.data.network.Resource
@@ -16,6 +17,8 @@ import com.shakiv.husain.disneywatch.ui.paging.RecommendedMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.TrendingMoviePagingSource
 import com.shakiv.husain.disneywatch.ui.paging.UpcomingMoviePagingSource
 import com.shakiv.husain.disneywatch.util.ApiConstants.API_KEY
+import com.shakiv.husain.disneywatch.util.orThrow
+import com.shakiv.husain.disneywatch.util.throwError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -143,14 +146,37 @@ class NetworkRepository @Inject constructor(
                     }
                 }
             }
-
             emit(Resource.Success(data = data))
-
         } catch (e: Exception) {
             e.printStackTrace()
             emit(Resource.Failure(data = null, message = e.localizedMessage))
         }
-
     }
+
+
+    fun getMovieVideos(movieId: String) = flow<Resource<MoviePreviewResponse>> {
+        emit(Resource.Loading())
+        try {
+            val previewResponse = NetworkRequest.process {
+                networkService.getMovieVideos(movie_id = movieId, API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results.orThrow("Error in movie preview...")
+                    }
+                    is ApiResponse.Failure -> {
+                        throwError("Error in movie preview.")
+                    }
+                }
+            }
+            emit(Resource.Success(data = previewResponse))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, e.localizedMessage))
+        }
+    }
+
+
+
 
 }
