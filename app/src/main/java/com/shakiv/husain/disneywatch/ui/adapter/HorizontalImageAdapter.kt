@@ -35,7 +35,7 @@ class HorizontalImageAdapter(
     ) :
         RecyclerView.ViewHolder(layoutHorizontalSliderItemBinding.root) {
 
-        var _image: Image? = null
+        private var _image: Image? = null
 
         init {
             with(layoutHorizontalSliderItemBinding) {
