@@ -176,7 +176,7 @@ class ViewDetailsFragment : BaseFragment() {
                         logd(previewResponse.toString())
                     }
                     is Resource.Failure -> {}
-                }🚀
+                }
             }
         }
     }
