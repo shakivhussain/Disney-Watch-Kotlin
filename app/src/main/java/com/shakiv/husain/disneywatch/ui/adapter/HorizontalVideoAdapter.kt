@@ -28,7 +28,6 @@ class HorizontalVideoAdapter :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            // Handle Click here
         }
 
 
