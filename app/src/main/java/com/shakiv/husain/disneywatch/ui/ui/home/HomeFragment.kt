@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
@@ -22,7 +21,8 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
-import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.getCurrentVisiblePosition
+import com.shakiv.husain.disneywatch.util.navigateViewDetails
 import com.shakiv.husain.disneywatch.util.setLinearLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,6 +43,8 @@ class HomeFragment : BaseFragment() {
     private lateinit var horizontalAdapter: HorizontalSliderAdapter
     private lateinit var verticalSliderAdapter: VerticalSliderAdapter
     private lateinit var mainHandler: Handler
+    private var currentPositionOfPopularMovieRecyclerView: Int = 0
+    private var currentPositionOfTrendingMovieRecyclerView: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +79,7 @@ class HomeFragment : BaseFragment() {
         bindNewMovies()
     }
 
+
     private fun bindNewMovies() {
         binding.viewPagerBottom.viewPager.apply {
             (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
@@ -106,7 +109,6 @@ class HomeFragment : BaseFragment() {
     private fun init() {
         mainHandler = Handler(Looper.getMainLooper())
         popularMoviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
-
         upcomingMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
         horizontalAdapter = HorizontalSliderAdapter(onItemClick = ::onItemClicked)
         verticalSliderAdapter = VerticalSliderAdapter(onItemClicked = ::onItemClicked)
@@ -115,16 +117,30 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun onItemClicked(movieId: String) {
-        val bundle = Bundle()
-        bundle.putString(ID, movieId)
-        findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
-
+        navigateViewDetails(movieId = movieId, R.id.action_homeFragment_to_viewDetailsFragment)
     }
 
 
     override fun onPause() {
         super.onPause()
         mainHandler.removeCallbacks(update)
+
+        currentPositionOfPopularMovieRecyclerView =
+            binding.layoutPopularMovie.recyclerView.getCurrentVisiblePosition()
+        currentPositionOfTrendingMovieRecyclerView =
+            binding.layoutTrendingMovie.recyclerView.getCurrentVisiblePosition()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.layoutPopularMovie.recyclerView.scrollToPosition(
+            currentPositionOfPopularMovieRecyclerView
+        )
+        binding.layoutTrendingMovie.recyclerView.scrollToPosition(
+            currentPositionOfTrendingMovieRecyclerView
+        )
+
     }
 
     private fun bindUpcomingMovies() {
