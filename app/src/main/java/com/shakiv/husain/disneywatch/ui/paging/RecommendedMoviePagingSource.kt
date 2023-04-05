@@ -2,6 +2,7 @@ package com.shakiv.husain.disneywatch.ui.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import com.shakiv.husain.disneywatch.data.api.NetworkService
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
@@ -37,7 +38,10 @@ class RecommendedMoviePagingSource(
                 }
             }
             val movies = data.data ?: emptyList()
-            val nextPage = data.page?.plus(1) ?: 1
+            var nextPage = data.page?.plus(1)
+            if (movies.isNullOrEmpty()){
+                nextPage = null
+            }
             LoadResult.Page(movies, null, nextPage)
         } catch (e: Exception) {
             e.printStackTrace()

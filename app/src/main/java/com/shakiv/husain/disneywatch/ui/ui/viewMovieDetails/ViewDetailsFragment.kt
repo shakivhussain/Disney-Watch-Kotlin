@@ -203,7 +203,7 @@ class ViewDetailsFragment : BaseFragment() {
                 tvMovieName.text = movieDetails.title
                 tvMovieDesc.text = movieDetails.overview
                 tvStatus.text = movieDetails.status
-                tvVote.text = movieDetails.vote_average.toString()
+                tvVote.text = movieDetails.vote_count.toKNotation()
                 tvReleaseDate.text = movieDetails.release_date
 
                 tvTitle.text = movieDetails.title

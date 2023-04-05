@@ -12,13 +12,15 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_viewDetailsFragment"
-            app:destination="@id/viewDetailsFragment" />
+            app:destination="@id/viewDetailsFragment"
+            app:launchSingleTop="true" />
     </fragment>
 
     <fragment
         android:id="@+id/viewDetailsFragment"
         android:name="com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails.ViewDetailsFragment"
         android:label="ViewDetailsFragment"
+        app:launchSingleTop="true"
         tools:layout="@layout/fragment_view_details">
 
     </fragment>

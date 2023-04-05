@@ -44,6 +44,18 @@ fun Long.toKNotation(): String {
     return "$n${suffix[power]}"
 }
 
+fun Int.toKNotation(): String {
+    val suffix = arrayOf("", "k", "M", "B", "T", "P", "E")
+    val thousand = 1000
+    var n = this
+    var power = 0
+    while (n >= thousand) {
+        n /= thousand
+        power++
+    }
+    return "$n${suffix[power]}"
+}
+
 /**
  * Returns a color value based on the specified attribute ID, using the current theme.
  * If the attribute is not defined or cannot be resolved, returns the default color value.
