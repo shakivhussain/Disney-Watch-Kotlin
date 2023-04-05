@@ -3,15 +3,19 @@ package com.shakiv.husain.disneywatch.util
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.RECYCLER_VIEW_ZERO_POSITION
+import com.shakiv.husain.disneywatch.util.AppConstants.TWO_SECONDS_IN_MILLIS
 import timber.log.Timber
 
 fun String.convertToFullUrl(): String {
@@ -88,6 +92,30 @@ fun RecyclerView.getCurrentVisiblePosition(): Int {
     val layoutManager = this.layoutManager as? LinearLayoutManager
     return layoutManager?.findFirstVisibleItemPosition() ?: RECYCLER_VIEW_ZERO_POSITION
 }
+
+
+fun <T : RecyclerView.Adapter<RecyclerView.ViewHolder>> ViewPager2.autoScroll(
+    adapter: T,
+    handler: Handler = Handler(Looper.getMainLooper()),
+    delay: Long = TWO_SECONDS_IN_MILLIS
+) {
+    var currentPosition = 0
+    val runnable = Runnable {
+        currentPosition = (currentPosition + 1) % adapter.itemCount
+        currentItem = currentPosition
+    }
+    val pagerCallBack = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            handler.removeCallbacks(runnable)
+            handler.postDelayed(runnable, delay)
+        }
+    }
+    registerOnPageChangeCallback(pagerCallBack)
+    handler.postDelayed(runnable, delay)
+
+}
+
 
 /**
  * Returns a color value based on the specified attribute ID, using the current theme.

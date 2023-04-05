@@ -1,6 +1,8 @@
 package com.shakiv.husain.disneywatch.ui.ui.viewMovieDetails
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
-import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
@@ -22,6 +24,8 @@ import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.AppConstants.TWO_SECONDS_IN_MILLIS
+import com.shakiv.husain.disneywatch.util.AppConstants.ZERO
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,6 +41,7 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var recommendedMovieAdapter: MovieAdapter
     private lateinit var videoAdapter: HorizontalVideoAdapter
     private var movieDetails: MovieDetails? = null
+    private lateinit var autoScrollHandler: Handler
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -45,6 +50,8 @@ class ViewDetailsFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         val id = arguments?.getString(ID) ?: ""
+
+        autoScrollHandler = Handler(Looper.getMainLooper())
 
         initViewModels()
         initAdapter()
@@ -90,27 +97,42 @@ class ViewDetailsFragment : BaseFragment() {
         val recommendedForYou = getStringFromId(R.string.recommended_for_you)
         val videos = getStringFromId(R.string.videos)
 
-
-
         bindMovieDetailsData(movieDetails)
-
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
             clipToPadding = false
             clipChildren = false
+
+//            val activeColor = context.getColorFromAttr(R.attr.vibrantOrange)
+//            val inactiveColor = context.getColorFromAttr(R.attr.subtitleColor)
+//            val radius = resources.getDimension(R.dimen._4sdp)
+//            val padding = resources.getDimension(R.dimen._4sdp)
+//
+//            val dotDecoration = DotDecoration(activeColor, inactiveColor, radius, padding)
+//            addItemDecoration(dotDecoration)
+
+            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    autoScrollHandler.removeCallbacks(updateRunnable)
+                    autoScrollHandler.postDelayed(updateRunnable, TWO_SECONDS_IN_MILLIS)
+                }
+            })
         }
 
         binding.recommendedLayout.apply {
             recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = recommendedMovieAdapter
+
+
             tvHeading.isVisible = recommendedForYou.isNotEmpty()
             tvHeading.text = recommendedForYou
         }
 
         binding.viewPagerBottom.viewPager.apply {
             (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
-
             adapter = videoAdapter
             clipToPadding = false
             clipChildren = false
@@ -134,6 +156,18 @@ class ViewDetailsFragment : BaseFragment() {
 //            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
 //        }
 
+    }
+
+    val updateRunnable = Runnable {
+
+        var photosSliderCurrentPage = binding.topViewPager.currentItem
+        photosSliderCurrentPage += 1
+
+        if (photosSliderCurrentPage == horizontalImageAdapter.itemCount) {
+            photosSliderCurrentPage = ZERO
+        }
+
+        binding.topViewPager.setCurrentItem(photosSliderCurrentPage, true)
     }
 
     private fun fetchMovieDetails(id: String) {
