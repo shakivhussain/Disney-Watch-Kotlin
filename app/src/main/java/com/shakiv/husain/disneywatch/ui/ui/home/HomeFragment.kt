@@ -3,7 +3,6 @@ package com.shakiv.husain.disneywatch.ui.ui.home
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.CustomLinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -134,8 +134,8 @@ class HomeFragment : BaseFragment() {
             recyclerView.isNestedScrollingEnabled = false
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
-            recyclerView.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager =CustomLinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             recyclerView.adapter = upcomingMovieAdapter
             tvHeading.text = context?.resources?.getString(R.string.upcoming_movies)
         }
@@ -146,8 +146,8 @@ class HomeFragment : BaseFragment() {
             recyclerView.isNestedScrollingEnabled = false
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
-            recyclerView.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.setHasFixedSize(true)
+            recyclerView.layoutManager = CustomLinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
             recyclerView.adapter = popularMoviesAdapter
             tvHeading.text = context?.resources?.getString(R.string.popular_movies)
         }
@@ -168,9 +168,9 @@ class HomeFragment : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (handler != null) {
-                        handler.removeCallbacks(update)
-                        handler.postDelayed(update, 2000)
+                    if (mainHandler != null) {
+                        mainHandler.removeCallbacks(update)
+                        mainHandler.postDelayed(update, 2000)
                     }
                 }
             })
