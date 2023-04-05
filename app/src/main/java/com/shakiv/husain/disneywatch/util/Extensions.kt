@@ -5,8 +5,13 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.AppConstants.RECYCLER_VIEW_ZERO_POSITION
 import timber.log.Timber
 
 fun String.convertToFullUrl(): String {
@@ -61,6 +66,27 @@ inline fun <reified T> T?.toStringOrEmpty(): String {
 
 fun RecyclerView.setLinearLayout(context: Context, orientation: Int) {
     layoutManager = CustomLinearLayoutManager(context, orientation, reverseLayout = false)
+}
+
+fun Fragment.navigate(actionId: Int, bundle: Bundle?, navOption: NavOptions?) {
+    findNavController().navigate(actionId, bundle, navOption)
+}
+
+fun Fragment.navigateViewDetails(movieId: String, actionId: Int) {
+    val bundle = Bundle().apply {
+        putString(ID, movieId)
+    }
+    val navOption = NavOptions.Builder()
+        .setEnterAnim(R.anim.fade_in)
+        .setExitAnim(R.anim.fade_out)
+        .build()
+    navigate(actionId, bundle, navOption)
+}
+
+
+fun RecyclerView.getCurrentVisiblePosition(): Int {
+    val layoutManager = this.layoutManager as? LinearLayoutManager
+    return layoutManager?.findFirstVisibleItemPosition() ?: RECYCLER_VIEW_ZERO_POSITION
 }
 
 /**
