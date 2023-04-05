@@ -99,6 +99,10 @@ class ViewDetailsFragment : BaseFragment() {
 
         bindMovieDetailsData(movieDetails)
 
+        binding.layoutHeader.apply {
+            buttonBack.isVisible = true
+        }
+
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
             clipToPadding = false
@@ -265,6 +269,9 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindListeners() {
         super.bindListeners()
+        binding.layoutHeader.buttonBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     override fun bindObservers() {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/toolbar_height"
+    android:background="?colorPrimary"
+    android:maxHeight="@dimen/toolbar_height"
+    android:minHeight="@dimen/toolbar_height">
+
+
+    <TextView
+        style="@style/HeadingBoldItalicLight_16"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fontFamily="@font/bold_italic"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/snowWhiteTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/buttonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:background="@drawable/background_round_"
+        android:backgroundTint="@color/snowWhiteTitle"
+        android:padding="4dp"
+        android:src="@drawable/ic_back_button"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
