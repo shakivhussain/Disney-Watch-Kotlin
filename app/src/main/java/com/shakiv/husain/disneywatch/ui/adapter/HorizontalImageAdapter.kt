@@ -12,7 +12,7 @@ import com.shakiv.husain.disneywatch.util.ImageUtils
 import com.shakiv.husain.disneywatch.util.convertToFullUrl
 
 class HorizontalImageAdapter(
-    private val onItemClick: (Image) -> Unit
+    private val onItemClick: (String) -> Unit
 ) : ListAdapter<Image, HorizontalImageAdapter.HorizontalImageVieHolder>(COMPARATOR) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HorizontalImageVieHolder {
@@ -31,7 +31,7 @@ class HorizontalImageAdapter(
 
     inner class HorizontalImageVieHolder(
         private val layoutHorizontalSliderItemBinding: LayoutHorizontalSliderItemBinding,
-        onItemClick: (Image) -> Unit
+        onItemClick: (String) -> Unit
     ) :
         RecyclerView.ViewHolder(layoutHorizontalSliderItemBinding.root) {
 
@@ -41,7 +41,7 @@ class HorizontalImageAdapter(
             with(layoutHorizontalSliderItemBinding) {
 
                 root.setOnClickListener {
-                    _image?.let { onItemClick.invoke(it) }
+                    _image?.let { }
                 }
             }
         }

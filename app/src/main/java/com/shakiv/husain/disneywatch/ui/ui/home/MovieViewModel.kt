@@ -27,11 +27,11 @@ class MovieViewModel @Inject constructor(
     }
 
     fun getUpComingMovies(): Flow<PagingData<Movie>> {
-        return repository.getUpcomingMovies()
+        return repository.getUpcomingMovies().cachedIn(viewModelScope)
     }
 
     fun getRecommended(movieId: String): Flow<PagingData<Movie>> {
-        return repository.getRecommendedMovies(movieId = movieId)
+        return repository.getRecommendedMovies(movieId = movieId).cachedIn(viewModelScope)
     }
 
     fun getMovieDetails(movieId: String): Flow<Resource<MovieDetails>> {
