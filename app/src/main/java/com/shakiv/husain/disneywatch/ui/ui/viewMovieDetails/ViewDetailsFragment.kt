@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shakiv.husain.disneywatch.DisneyApplication
@@ -34,7 +35,8 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
     private lateinit var castAdapter: CastAdapter
     private lateinit var recommendedMovieAdapter: MovieAdapter
-    private lateinit var videoAdapter : HorizontalVideoAdapter
+    private lateinit var videoAdapter: HorizontalVideoAdapter
+    private var movieDetails: MovieDetails? = null
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -60,6 +62,7 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         bindViews()
         bindListeners()
         bindObservers()
@@ -67,13 +70,17 @@ class ViewDetailsFragment : BaseFragment() {
 
     private fun initAdapter() {
         horizontalImageAdapter = HorizontalImageAdapter(::onImageClick)
-        horizontalSliderAdapter = HorizontalSliderAdapter()
+        horizontalSliderAdapter = HorizontalSliderAdapter(onItemClick = ::onImageClick)
         castAdapter = CastAdapter()
         recommendedMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
         videoAdapter = HorizontalVideoAdapter(lifecycle)
     }
 
     private fun onItemClicked(id: String) {
+
+        val bundle = Bundle()
+        bundle.putString(ID, id)
+        findNavController().navigate(R.id.viewDetailsFragment, bundle)
     }
 
 
@@ -85,6 +92,8 @@ class ViewDetailsFragment : BaseFragment() {
 
 
 
+        bindMovieDetailsData(movieDetails)
+
 
         binding.topViewPager.apply {
             adapter = horizontalImageAdapter
@@ -93,8 +102,7 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         binding.recommendedLayout.apply {
-            recyclerView.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = recommendedMovieAdapter
             tvHeading.isVisible = recommendedForYou.isNotEmpty()
             tvHeading.text = recommendedForYou
@@ -118,8 +126,7 @@ class ViewDetailsFragment : BaseFragment() {
         binding.castLayout.apply {
             tvHeading.text = castTitle
             recyclerView.adapter = castAdapter
-            recyclerView.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
         }
 
 //        binding.viewPagerBottom.apply {
@@ -135,7 +142,8 @@ class ViewDetailsFragment : BaseFragment() {
             viewModel.getMovieDetails(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        bindMovieDetailsData(it.data ?: return@collectLatest)
+                        movieDetails = it.data
+                        bindMovieDetailsData(movieDetails)
                     }
                     is Resource.Loading -> {
                     }
@@ -197,20 +205,25 @@ class ViewDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun bindMovieDetailsData(movieDetails: MovieDetails) {
+    private fun bindMovieDetailsData(movieDetails: MovieDetails?) {
+        if (movieDetails == null) {
+            return
+        }
         binding.apply {
             movieDetails.let { movieDetails: MovieDetails ->
-                tvMovieName.text = movieDetails.title
-                tvMovieDesc.text = movieDetails.overview
-                tvStatus.text = movieDetails.status
-                tvVote.text = movieDetails.vote_count.toKNotation()
-                tvReleaseDate.text = movieDetails.release_date
+                tvMovieName.text = movieDetails.title.orEmpty()
+                tvMovieDesc.text = movieDetails.overview.orEmpty()
+                tvStatus.text = movieDetails.status.orEmpty()
+                tvVote.text = movieDetails.vote_count?.toKNotation().orEmpty()
+                tvReleaseDate.text = movieDetails.release_date.orEmpty()
 
-                tvTitle.text = movieDetails.title
-                tvRelease.text = movieDetails.status
-                tvReleaseDate.text = movieDetails.release_date
+                tvTitle.text = movieDetails.title.orEmpty()
+                tvRelease.text = movieDetails.status.orEmpty()
+                tvReleaseDate.text = movieDetails.release_date.orEmpty()
                 tvRevenue.text = movieDetails.revenue?.toKNotation()
-                ImageUtils.setImage(movieDetails.poster_path.convertToFullUrl(), layoutPoster.imageView)
+                ImageUtils.setImage(
+                    movieDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
+                )
 
             }
         }
@@ -231,7 +244,7 @@ class ViewDetailsFragment : BaseFragment() {
 
     }
 
-    private fun onImageClick(image: Image) {
+    private fun onImageClick(image: String) {
     }
 
 }

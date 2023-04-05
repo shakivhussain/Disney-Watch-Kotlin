@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SmoothScroller
 
 
-class CustomLinearLayoutManager(context: Context?, orientation: Int, reverseLayout: Boolean) :
+class CustomLinearLayoutManager(context: Context, orientation: Int, reverseLayout: Boolean) :
     LinearLayoutManager(context, orientation, reverseLayout) {
     override fun smoothScrollToPosition(
         recyclerView: RecyclerView, state: RecyclerView.State, position: Int

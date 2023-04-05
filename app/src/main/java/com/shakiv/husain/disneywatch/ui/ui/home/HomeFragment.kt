@@ -23,7 +23,7 @@ import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
-import com.shakiv.husain.disneywatch.util.CustomLinearLayoutManager
+import com.shakiv.husain.disneywatch.util.setLinearLayout
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -108,17 +108,15 @@ class HomeFragment : BaseFragment() {
         popularMoviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
 
         upcomingMovieAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
-        horizontalAdapter = HorizontalSliderAdapter()
-        verticalSliderAdapter = VerticalSliderAdapter()
+        horizontalAdapter = HorizontalSliderAdapter(onItemClick = ::onItemClicked)
+        verticalSliderAdapter = VerticalSliderAdapter(onItemClicked = ::onItemClicked)
 
         bindApiObservers()
     }
 
     private fun onItemClicked(movieId: String) {
-
         val bundle = Bundle()
         bundle.putString(ID, movieId)
-
         findNavController().navigate(R.id.action_homeFragment_to_viewDetailsFragment, bundle)
 
     }
@@ -135,7 +133,7 @@ class HomeFragment : BaseFragment() {
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager =CustomLinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = upcomingMovieAdapter
             tvHeading.text = context?.resources?.getString(R.string.upcoming_movies)
         }
@@ -147,7 +145,7 @@ class HomeFragment : BaseFragment() {
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.layoutManager = CustomLinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = popularMoviesAdapter
             tvHeading.text = context?.resources?.getString(R.string.popular_movies)
         }

@@ -9,8 +9,10 @@ import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.databinding.LayoutHorizontalSliderItemBinding
 import com.shakiv.husain.disneywatch.util.ApiConstants.BASE_URL_WITH_ORIGINAL
 import com.shakiv.husain.disneywatch.util.ImageUtils
+import com.shakiv.husain.disneywatch.util.logd
+import com.shakiv.husain.disneywatch.util.toStringOrEmpty
 
-class HorizontalSliderAdapter :
+class HorizontalSliderAdapter(private val onItemClick: (String) -> Unit) :
     PagingDataAdapter<Movie, HorizontalSliderAdapter.SliderViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SliderViewHolder {
@@ -18,7 +20,7 @@ class HorizontalSliderAdapter :
         val binding = LayoutHorizontalSliderItemBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return SliderViewHolder(binding)
+        return SliderViewHolder(binding, onItemClick)
     }
 
     override fun onBindViewHolder(holder: SliderViewHolder, position: Int) {
@@ -26,16 +28,33 @@ class HorizontalSliderAdapter :
     }
 
 
-    inner class SliderViewHolder(private val binding: LayoutHorizontalSliderItemBinding) :
+    inner class SliderViewHolder(
+        private val binding: LayoutHorizontalSliderItemBinding, onItemClick: (String) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
+        private var _movie: Movie? = null
+
+        init {
+            with(binding) {
+                root.setOnClickListener {
+
+
+                    _movie?.id?.let {id->
+                        onItemClick.invoke(id.toStringOrEmpty())
+                    }
+                }
+            }
+        }
 
         fun bind(position: Int) {
-            val item = getItem(position)
-            val imageUrl = "${BASE_URL_WITH_ORIGINAL + item?.backdrop_path}"
+            val movie = getItem(position)
+            _movie = movie
+
+            val imageUrl = "${BASE_URL_WITH_ORIGINAL + movie?.backdrop_path}"
             ImageUtils.setImage(imageUrl, binding.ivPoster)
 
-            binding.tvMovieName.text = item?.title?:""
-            binding.tvDate.text = item?.release_date?:""
+            binding.tvMovieName.text = movie?.title ?: ""
+            binding.tvDate.text = movie?.release_date ?: ""
 
         }
     }

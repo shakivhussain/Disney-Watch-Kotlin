@@ -13,7 +13,7 @@
         <action
             android:id="@+id/action_homeFragment_to_viewDetailsFragment"
             app:destination="@id/viewDetailsFragment"
-            app:launchSingleTop="true" />
+        />
     </fragment>
 
     <fragment

@@ -5,9 +5,8 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import com.shakiv.husain.disneywatch.data.network.Resource
+import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
 
 fun String.convertToFullUrl(): String {
@@ -20,7 +19,7 @@ fun Fragment.navigate(directions: Int, bundle: Bundle? = null) {
 }
 
 
-fun Fragment.getStringFromId(id:Int) : String{
+fun Fragment.getStringFromId(id: Int): String {
     return resources.getString(id)
 }
 
@@ -54,6 +53,14 @@ fun Int.toKNotation(): String {
         power++
     }
     return "$n${suffix[power]}"
+}
+
+inline fun <reified T> T?.toStringOrEmpty(): String {
+    return this?.toString() ?: ""
+}
+
+fun RecyclerView.setLinearLayout(context: Context, orientation: Int) {
+    layoutManager = CustomLinearLayoutManager(context, orientation, reverseLayout = false)
 }
 
 /**
