@@ -173,12 +173,19 @@ class NetworkRepository @Inject constructor(
     }
 
 
-    fun searchMovies(query:String) : Flow<PagingData<Movie>> {
-        val config = PagingConfig(20,4,true,20)
-        return Pager(config){
+    fun searchMovies(query: String): Flow<PagingData<Movie>> {
+        val config = PagingConfig(20, 4, true, 20)
+        return Pager(config) {
             SearchMoviesPagingSource(query = query, service = networkService)
         }.flow
     }
 
+
+    fun searchTvShows(query: String): Flow<PagingData<Movie>> {
+        val config = PagingConfig(20, 4, true, 20)
+        return Pager(config) {
+            TvShowPagingSource(query = query, service = networkService)
+        }.flow
+    }
 
 }

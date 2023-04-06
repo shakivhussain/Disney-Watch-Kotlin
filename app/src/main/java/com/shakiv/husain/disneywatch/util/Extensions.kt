@@ -33,11 +33,11 @@ fun Fragment.getStringFromId(id: Int): String {
 }
 
 inline fun <reified T> T?.orThrow(message: String = "Object is null"): T {
-    return this ?: throw Exception(message)
+    return this ?: throw Exception("Error in movie fetching $message.")
 }
 
 fun throwError(message: String): Nothing {
-    throw Exception(message)
+    throw Exception("Error in movie fetching $message.")
 }
 
 fun Long.toKNotation(): String {
@@ -68,7 +68,7 @@ inline fun <reified T> T?.toStringOrEmpty(): String {
     return this?.toString() ?: ""
 }
 
-fun RecyclerView.setLinearLayout(context: Context, orientation: Int) {
+fun RecyclerView.setLinearLayoutManager(context: Context, orientation: Int) {
     layoutManager = CustomLinearLayoutManager(context, orientation, reverseLayout = false)
 }
 
@@ -76,7 +76,7 @@ fun Fragment.navigate(actionId: Int, bundle: Bundle?, navOption: NavOptions?) {
     findNavController().navigate(actionId, bundle, navOption)
 }
 
-fun Fragment.navigateViewDetails(movieId: String, actionId: Int) {
+fun Fragment.navigateToDestination(movieId: String, actionId: Int) {
     val bundle = Bundle().apply {
         putString(ID, movieId)
     }

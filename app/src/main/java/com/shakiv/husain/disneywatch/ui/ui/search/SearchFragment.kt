@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
+import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.databinding.LayoutSearchFragmentBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
-import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
-import com.shakiv.husain.disneywatch.util.setLinearLayout
+import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
+import com.shakiv.husain.disneywatch.util.navigateToDestination
+import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,17 +24,23 @@ class SearchFragment : BaseFragment() {
 
     lateinit var binding: LayoutSearchFragmentBinding
 
-    @Inject
-    lateinit var factory: MainViewModelFactory
-    lateinit var movieViewModel: MovieViewModel
+    @Inject lateinit var factory: MainViewModelFactory
+    lateinit var mediaViewModel: MediaViewModel
     lateinit var moviesAdapter: MovieAdapter
+    lateinit var tvShowAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initViewModels()
         initAdapters()
-        movieViewModel.searchMovies("Shark")
+        searchQuery()
 
+    }
+
+    private fun searchQuery() {
+
+        mediaViewModel.searchMovies("Shark")
+        mediaViewModel.searchTvShow("the")
     }
 
     override fun onCreateView(
@@ -55,33 +63,46 @@ class SearchFragment : BaseFragment() {
 
         binding.layoutMovies.apply {
             recyclerView.adapter = moviesAdapter
-            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
             tvHeading.text = "Movies"
+        }
+
+        binding.layoutTvShow.apply {
+            recyclerView.adapter = tvShowAdapter
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setHasFixedSize(true)
+            tvHeading.text = "Tv Shows"
         }
     }
 
     override fun bindObservers() {
         super.bindObservers()
 
+        lifecycleScope.launch {
+            mediaViewModel.moviesPagingData.collectLatest {
+                moviesAdapter.submitData(it)
+            }
+        }
 
         lifecycleScope.launch {
-            movieViewModel.moviesPagingData.collectLatest {
-                moviesAdapter.submitData(it)
+            mediaViewModel.tvShowsPagingData.collectLatest {
+                tvShowAdapter.submitData(it)
             }
         }
     }
 
     private fun initAdapters() {
         moviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
+        tvShowAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
     }
 
     private fun onItemClicked(id: String) {
-
+        navigateToDestination(movieId = id, actionId = R.id.action_global_viewDetails)
     }
 
     override fun initViewModels() {
         super.initViewModels()
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
-        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+        mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
     }
 }

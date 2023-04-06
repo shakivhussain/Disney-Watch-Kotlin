@@ -21,7 +21,7 @@ import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.*
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
-import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
 import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.TWO_SECONDS_IN_MILLIS
@@ -34,7 +34,7 @@ class ViewDetailsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentViewDetailsBinding
 
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var viewModel: MediaViewModel
     private lateinit var horizontalImageAdapter: HorizontalImageAdapter
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
     private lateinit var castAdapter: CastAdapter
@@ -127,7 +127,7 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         binding.recommendedLayout.apply {
-            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = recommendedMovieAdapter
 
 
@@ -152,7 +152,7 @@ class ViewDetailsFragment : BaseFragment() {
         binding.castLayout.apply {
             tvHeading.text = castTitle
             recyclerView.adapter = castAdapter
-            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
         }
 
 //        binding.viewPagerBottom.apply {
@@ -282,7 +282,7 @@ class ViewDetailsFragment : BaseFragment() {
     override fun initViewModels() {
         super.initViewModels()
         (activity?.application as DisneyApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
 
     }
 

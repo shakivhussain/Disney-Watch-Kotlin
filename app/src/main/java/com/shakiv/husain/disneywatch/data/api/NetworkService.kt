@@ -80,5 +80,11 @@ interface NetworkService {
         @Query(KEY_API) apiKey: String
     ): Response<BaseResponse<List<Movie>>>
 
+    @GET("search/tv")
+    suspend fun searchTvShows(
+        @Query(KEY_QUERY) query: String,
+        @Query(KEY_PAGE) page: Int,
+        @Query(KEY_API) apiKey: String
+    ): Response<BaseResponse<List<Movie>>>
 
 }

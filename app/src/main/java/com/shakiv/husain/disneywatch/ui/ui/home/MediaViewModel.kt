@@ -18,12 +18,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MovieViewModel @Inject constructor(
+class MediaViewModel @Inject constructor(
     private val repository: NetworkRepository
 ) : ViewModel() {
 
     private val _moviesPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
     val moviesPagingData = _moviesPagingData.asStateFlow()
+
+    private val _tvShowsPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
+    val tvShowsPagingData = _tvShowsPagingData.asStateFlow()
 
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return repository.getPopularMovies().cachedIn(viewModelScope)
@@ -73,5 +76,15 @@ class MovieViewModel @Inject constructor(
                 }
         }
     }
+
+
+    fun searchTvShow(query: String) {
+        viewModelScope.launch {
+            repository.searchTvShows(query).cachedIn(viewModelScope).collectLatest {
+                _tvShowsPagingData.emit(it)
+            }
+        }
+    }
+
 
 }
