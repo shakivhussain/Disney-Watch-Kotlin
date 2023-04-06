@@ -23,6 +23,7 @@
     <dimen name="textSize14">14sp</dimen>
     <dimen name="textSize10">10sp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="_30sdp_margin">30dp</dimen>
 
 
 </resources>

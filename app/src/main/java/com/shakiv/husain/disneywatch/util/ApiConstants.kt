@@ -11,6 +11,7 @@ object ApiConstants {
     const val KEY_PAGE="page"
     const val KEY_MOVIE_ID ="movie_id"
     const val KEY_MOVIE_ID_PATH ="movie_id"
+    const val KEY_QUERY = "query"
 
     // Image URL'S
     private const val IMAGE_BASE_URL = "https://image.tmdb.org/"

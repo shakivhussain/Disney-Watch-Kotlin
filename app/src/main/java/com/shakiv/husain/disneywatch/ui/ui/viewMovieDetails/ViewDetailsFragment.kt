@@ -241,6 +241,7 @@ class ViewDetailsFragment : BaseFragment() {
                 }
             }
         }
+
     }
 
     private fun bindMovieDetailsData(movieDetails: MovieDetails?) {

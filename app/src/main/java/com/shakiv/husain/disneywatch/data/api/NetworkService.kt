@@ -1,6 +1,5 @@
 package com.shakiv.husain.disneywatch.data.api
 
-import android.media.tv.TvContract.PreviewPrograms
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
 import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
@@ -11,6 +10,7 @@ import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID_PATH
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_PAGE
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_QUERY
 import com.shakiv.husain.disneywatch.util.ApiConstants.POPULAR_MOVIES
 import com.shakiv.husain.disneywatch.util.ApiConstants.TOP_RATED_MOVIES
 import com.shakiv.husain.disneywatch.util.ApiConstants.UPCOMING_MOVIES
@@ -71,6 +71,14 @@ interface NetworkService {
         @Path(KEY_MOVIE_ID) movie_id: String,
         @Query(KEY_API) apiKey: String,
         @Query(KEY_PAGE) page: Int? = 1
-    ) : Response<MoviePreviewResponse>
+    ): Response<MoviePreviewResponse>
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query(KEY_QUERY) query: String,
+        @Query(KEY_PAGE) page: Int,
+        @Query(KEY_API) apiKey: String
+    ): Response<BaseResponse<List<Movie>>>
+
 
 }
