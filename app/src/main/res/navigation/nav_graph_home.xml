@@ -12,8 +12,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_viewDetailsFragment"
-            app:destination="@id/viewDetailsFragment"
-        />
+            app:destination="@id/viewDetailsFragment" />
     </fragment>
 
     <fragment
@@ -29,6 +28,18 @@
     <action
         android:id="@+id/action_global_viewDetails"
         app:destination="@id/viewDetailsFragment" />
+
+
+    <fragment
+        android:id="@+id/myFavouriteFragment"
+        android:name="com.shakiv.husain.disneywatch.ui.ui.myFavourites.MyFavouriteFragment"
+        android:label="MyFavouriteFragment"
+        tools:layout="@layout/layout_my_favourites_fragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.shakiv.husain.disneywatch.ui.ui.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/layout_search_fragment" />
 
 
 </navigation>
