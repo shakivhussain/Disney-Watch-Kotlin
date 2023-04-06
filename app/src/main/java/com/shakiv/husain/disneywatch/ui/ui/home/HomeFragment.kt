@@ -22,8 +22,8 @@ import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
 import com.shakiv.husain.disneywatch.util.getCurrentVisiblePosition
-import com.shakiv.husain.disneywatch.util.navigateViewDetails
-import com.shakiv.husain.disneywatch.util.setLinearLayout
+import com.shakiv.husain.disneywatch.util.navigateToDestination
+import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class HomeFragment : BaseFragment() {
 
     @Inject
     lateinit var factory: MainViewModelFactory
-    lateinit var movieViewModel: MovieViewModel
+    lateinit var mediaViewModel: MediaViewModel
 
     private lateinit var popularMoviesAdapter: MovieAdapter
     private lateinit var upcomingMovieAdapter: MovieAdapter
@@ -117,7 +117,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun onItemClicked(movieId: String) {
-        navigateViewDetails(movieId = movieId, R.id.action_homeFragment_to_viewDetailsFragment)
+        navigateToDestination(movieId = movieId, R.id.action_homeFragment_to_viewDetailsFragment)
     }
 
 
@@ -149,7 +149,7 @@ class HomeFragment : BaseFragment() {
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = upcomingMovieAdapter
             tvHeading.text = context?.resources?.getString(R.string.upcoming_movies)
         }
@@ -161,7 +161,7 @@ class HomeFragment : BaseFragment() {
             ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
             recyclerView.setHasFixedSize(true)
-            recyclerView.setLinearLayout(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.adapter = popularMoviesAdapter
             tvHeading.text = context?.resources?.getString(R.string.popular_movies)
         }
@@ -199,25 +199,25 @@ class HomeFragment : BaseFragment() {
         super.bindObservers()
 
         lifecycleScope.launch {
-            movieViewModel.getTrendingMovies().collectLatest {
+            mediaViewModel.getTrendingMovies().collectLatest {
                 verticalSliderAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            movieViewModel.getUpComingMovies().collectLatest {
+            mediaViewModel.getUpComingMovies().collectLatest {
                 upcomingMovieAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            movieViewModel.getUpComingMovies().collectLatest {
+            mediaViewModel.getUpComingMovies().collectLatest {
                 horizontalAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            movieViewModel.getPopularMovies().collectLatest {
+            mediaViewModel.getPopularMovies().collectLatest {
                 it.let {
                     popularMoviesAdapter.submitData(it)
                 }
@@ -268,6 +268,6 @@ class HomeFragment : BaseFragment() {
 
     override fun initViewModels() {
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
-        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+        mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
     }
 }
