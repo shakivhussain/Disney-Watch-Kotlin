@@ -12,11 +12,18 @@ import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.data.repository.NetworkRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MovieViewModel @Inject constructor(
     private val repository: NetworkRepository
 ) : ViewModel() {
+
+    private val _moviesPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
+    val moviesPagingData = _moviesPagingData.asStateFlow()
 
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return repository.getPopularMovies().cachedIn(viewModelScope)
@@ -52,10 +59,19 @@ class MovieViewModel @Inject constructor(
         return repository.getCasts(movieId)
     }
 
-
-
     fun getMoviesPreview(movieId: String): Flow<Resource<MoviePreviewResponse>> {
         return repository.getMovieVideos(movieId)
+    }
+
+
+    fun searchMovies(query: String) {
+        viewModelScope.launch {
+            repository.searchMovies(query)
+                .cachedIn(viewModelScope)
+                .collectLatest {
+                    _moviesPagingData.emit(it)
+                }
+        }
     }
 
 }

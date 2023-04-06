@@ -17,14 +17,15 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layoutHeader"
-        android:layout_height="0dp">
+        app:layout_constraintTop_toBottomOf="@+id/layoutHeader">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="50dp">
+            android:layout_height="match_parent">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/topViewPager"
@@ -72,8 +73,8 @@
                     style="@style/HeadingSemiBold_20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="The Pertige"
                     android:maxLines="2"
+                    android:text="The Pertige"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -122,10 +123,10 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvMovieDesc"
                     style="@style/SubHeading_12"
-                    android:textSize="13sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="@dimen/_16sdp"
+                    android:textSize="13sp"
                     tools:text="@string/description" />
 
 
@@ -265,6 +266,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_marginBottom="@dimen/_30sdp_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layout_trending_movie" />
@@ -272,7 +274,6 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     </androidx.core.widget.NestedScrollView>
 

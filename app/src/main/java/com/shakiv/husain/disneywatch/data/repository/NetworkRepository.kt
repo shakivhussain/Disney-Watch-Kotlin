@@ -12,10 +12,7 @@ import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
 import com.shakiv.husain.disneywatch.data.network.Resource
-import com.shakiv.husain.disneywatch.ui.paging.PopularMoviePagingSource
-import com.shakiv.husain.disneywatch.ui.paging.RecommendedMoviePagingSource
-import com.shakiv.husain.disneywatch.ui.paging.TrendingMoviePagingSource
-import com.shakiv.husain.disneywatch.ui.paging.UpcomingMoviePagingSource
+import com.shakiv.husain.disneywatch.ui.paging.*
 import com.shakiv.husain.disneywatch.util.ApiConstants.API_KEY
 import com.shakiv.husain.disneywatch.util.orThrow
 import com.shakiv.husain.disneywatch.util.throwError
@@ -53,7 +50,6 @@ class NetworkRepository @Inject constructor(
 
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         val config = PagingConfig(20, 4, true, 20)
-
         return Pager(config) {
             PopularMoviePagingSource(networkService)
         }.flow
@@ -177,6 +173,12 @@ class NetworkRepository @Inject constructor(
     }
 
 
+    fun searchMovies(query:String) : Flow<PagingData<Movie>> {
+        val config = PagingConfig(20,4,true,20)
+        return Pager(config){
+            SearchMoviesPagingSource(query = query, service = networkService)
+        }.flow
+    }
 
 
 }
