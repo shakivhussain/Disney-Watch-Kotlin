@@ -27,4 +27,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutMovies" />
 
+
+    <include
+        android:id="@+id/layoutCollections"
+        layout="@layout/layout_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutTvShow" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

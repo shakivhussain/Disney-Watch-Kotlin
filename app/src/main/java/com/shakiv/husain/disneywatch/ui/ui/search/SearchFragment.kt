@@ -28,6 +28,7 @@ class SearchFragment : BaseFragment() {
     lateinit var mediaViewModel: MediaViewModel
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
+    lateinit var collectionsAdapter: MovieAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class SearchFragment : BaseFragment() {
 
         mediaViewModel.searchMovies("Shark")
         mediaViewModel.searchTvShow("the")
+        mediaViewModel.searchCollections("the")
     }
 
     override fun onCreateView(
@@ -73,6 +75,15 @@ class SearchFragment : BaseFragment() {
             recyclerView.setHasFixedSize(true)
             tvHeading.text = "Tv Shows"
         }
+
+
+        binding.layoutCollections.apply {
+
+            recyclerView.adapter = tvShowAdapter
+            recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
+            recyclerView.setHasFixedSize(true)
+            tvHeading.text = "Collections"
+        }
     }
 
     override fun bindObservers() {
@@ -89,11 +100,18 @@ class SearchFragment : BaseFragment() {
                 tvShowAdapter.submitData(it)
             }
         }
+
+        lifecycleScope.launch {
+            mediaViewModel.collectionPagingSource.collectLatest {
+                collectionsAdapter.submitData(it)
+            }
+        }
     }
 
     private fun initAdapters() {
         moviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
         tvShowAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
+        collectionsAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
     }
 
     private fun onItemClicked(id: String) {

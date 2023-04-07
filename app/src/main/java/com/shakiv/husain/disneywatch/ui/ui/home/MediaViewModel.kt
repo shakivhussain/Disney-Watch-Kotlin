@@ -28,6 +28,10 @@ class MediaViewModel @Inject constructor(
     private val _tvShowsPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
     val tvShowsPagingData = _tvShowsPagingData.asStateFlow()
 
+
+    private val _collectionPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
+    val collectionPagingSource = _collectionPagingData.asStateFlow()
+
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return repository.getPopularMovies().cachedIn(viewModelScope)
     }
@@ -87,4 +91,14 @@ class MediaViewModel @Inject constructor(
     }
 
 
+    fun searchCollections(query: String) {
+        viewModelScope.launch {
+            repository
+                .searchCollection(query)
+                .cachedIn(viewModelScope)
+                .collectLatest {
+                    _collectionPagingData.emit(it)
+                }
+        }
+    }
 }
