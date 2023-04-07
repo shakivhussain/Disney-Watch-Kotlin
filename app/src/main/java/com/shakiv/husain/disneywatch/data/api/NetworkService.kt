@@ -87,4 +87,13 @@ interface NetworkService {
         @Query(KEY_API) apiKey: String
     ): Response<BaseResponse<List<Movie>>>
 
+
+    @GET("search/collection")
+    suspend fun searchCollections(
+        @Query(KEY_QUERY) query: String,
+        @Query(KEY_PAGE) page: Int,
+        @Query(KEY_API) apiKey: String
+    ): Response<BaseResponse<List<Movie>>>
+
+
 }
