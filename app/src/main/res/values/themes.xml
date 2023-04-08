@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.DisneyWatch" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorPrimarySecond</item>
         <item name="colorPrimaryVariant">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/colorWhite</item>
         <!-- Secondary brand color. -->
@@ -10,8 +10,7 @@
         <item name="colorSecondaryVariant">@color/colorSecondary</item>
         <item name="colorOnSecondary">@color/darkBlue</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-
+        <item name="android:statusBarColor">@color/lightSilverSubtitle</item>
 
         <item name="colorBackgroundPrimary">@color/headerWhite</item>
         <item name="colorHeading">@color/blackLight</item>
