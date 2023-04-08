@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/toolbar_height"
-    android:background="?colorPrimary"
+    android:background="?colorBackgroundPrimary"
     android:maxHeight="@dimen/toolbar_height"
     android:minHeight="@dimen/toolbar_height">
 
@@ -17,7 +17,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textColor="@color/snowWhiteTitle"
+        android:textColor="?colorHeading"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
