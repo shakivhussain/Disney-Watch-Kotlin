@@ -9,4 +9,6 @@
     <string name="cast">Cast</string>
     <string name="recommended_for_you">Recommended for you</string>
     <string name="videos">Trailer &amp; Videos</string>
+    <string name="search_movies_tv_shows_collections">Search Movies, Tv Shows, Collections</string>
+    <string name="the_placeholder">The Placeholder</string>
 </resources>

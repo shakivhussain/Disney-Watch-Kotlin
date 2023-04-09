@@ -84,9 +84,12 @@ class MediaViewModel @Inject constructor(
 
     fun searchTvShow(query: String) {
         viewModelScope.launch {
-            repository.searchTvShows(query).cachedIn(viewModelScope).collectLatest {
-                _tvShowsPagingData.emit(it)
-            }
+            repository
+                .searchTvShows(query)
+                .cachedIn(viewModelScope)
+                .collectLatest {
+                    _tvShowsPagingData.emit(it)
+                }
         }
     }
 

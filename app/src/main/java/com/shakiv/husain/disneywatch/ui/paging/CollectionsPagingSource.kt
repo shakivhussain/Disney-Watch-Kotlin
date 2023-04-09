@@ -38,7 +38,7 @@ class CollectionsPagingSource(
 
             val collections = data.data ?: emptyList()
             var nextPage = data.page
-
+            nextPage = nextPage?.plus(1)
             if (collections.isNullOrEmpty()) {
                 nextPage = null
             }

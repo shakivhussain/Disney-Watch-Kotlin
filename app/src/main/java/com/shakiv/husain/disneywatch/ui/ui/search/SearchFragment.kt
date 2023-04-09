@@ -1,6 +1,9 @@
 package com.shakiv.husain.disneywatch.ui.ui.search
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +17,7 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
-import com.shakiv.husain.disneywatch.util.navigateToDestination
-import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
+import com.shakiv.husain.disneywatch.util.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,15 +36,13 @@ class SearchFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         initViewModels()
         initAdapters()
-        searchQuery()
-
     }
 
-    private fun searchQuery() {
+    private fun searchQuery(query: String) {
 
-        mediaViewModel.searchMovies("Shark")
-        mediaViewModel.searchTvShow("the")
-        mediaViewModel.searchCollections("the")
+        mediaViewModel.searchMovies(query)
+        mediaViewModel.searchTvShow(query)
+        mediaViewModel.searchCollections(query)
     }
 
     override fun onCreateView(
@@ -55,6 +55,7 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bindListeners()
         bindObservers()
         bindViews()
     }
@@ -79,11 +80,23 @@ class SearchFragment : BaseFragment() {
 
         binding.layoutCollections.apply {
 
-            recyclerView.adapter = tvShowAdapter
+            recyclerView.adapter = collectionsAdapter
             recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
             recyclerView.setHasFixedSize(true)
             tvHeading.text = "Collections"
         }
+    }
+
+    override fun bindListeners() {
+        super.bindListeners()
+        binding.layoutSearch.editText.doOnDebouncedTextChange(lifecycle, 500) { editable ->
+
+            val searchQuery = editable.toStringOrEmpty()
+            searchQuery(searchQuery)
+
+        }
+
+
     }
 
     override fun bindObservers() {
