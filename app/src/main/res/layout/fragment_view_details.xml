@@ -74,7 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
-                    android:text="The Pertige"
+                    tools:text="@string/the_placeholder"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -84,17 +84,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:text="The Pertige"
-                    android:textColor="?electricPurple"
+                    android:textColor="?vibrantOrange"
+                    tools:text="@string/the_placeholder"
                     android:textSize="14sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvReleaseDate"
                     style="@style/SubHeading_14"
                     android:layout_width="match_parent"
+                    tools:text="@string/the_placeholder"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:text="The Pertige"
                     android:textSize="14sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

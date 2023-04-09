@@ -5,8 +5,11 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +33,21 @@ fun Fragment.navigate(directions: Int, bundle: Bundle? = null) {
 
 fun Fragment.getStringFromId(id: Int): String {
     return resources.getString(id)
+}
+
+
+fun EditText.doOnDebouncedTextChange(
+    lifecycle: Lifecycle,
+    timeInMillis: Long = 700,
+    callbacks: (editable: Editable?) -> Unit
+) {
+    addTextChangedListener(object : DebounceTextWatch(lifecycle = lifecycle, timeInMillis) {
+        override fun afterTextDebounced(editable: Editable?) {
+
+
+            callbacks.invoke(editable)
+        }
+    })
 }
 
 inline fun <reified T> T?.orThrow(message: String = "Object is null"): T {

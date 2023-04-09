@@ -9,7 +9,7 @@
     <dimen name="_80sdp">80dp</dimen>
     <dimen name="_16sdp">16dp</dimen>
     <dimen name="_4sdp">4dp</dimen>
-
+    <dimen name="_sdp24">24dp</dimen>
 
 
     // Text Dimension
@@ -23,7 +23,14 @@
     <dimen name="textSize14">14sp</dimen>
     <dimen name="textSize10">10sp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+
+    // Margin
+    <dimen name="_24sdp_margin">@dimen/_sdp24</dimen>
     <dimen name="_30sdp_margin">30dp</dimen>
+    <dimen name="margin_16dp">@dimen/_16sdp</dimen>
+
+    // Padding
+    <dimen name="padding_16dp">@dimen/_16sdp</dimen>
 
 
 </resources>
