@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,11 +17,14 @@ import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.databinding.FragmentHomeBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.adapter.VerticalSliderAdapter
+import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.getCurrentVisiblePosition
 import com.shakiv.husain.disneywatch.util.navigateToDestination
 import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
@@ -117,7 +121,11 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun onItemClicked(movieId: String) {
-        navigateToDestination(movieId = movieId, R.id.action_homeFragment_to_viewDetailsFragment)
+        val bundle = bundleOf(
+            ID to movieId,
+            MEDIA_TYPE to MediaType.MOVIE
+        )
+        navigateToDestination(bundle, R.id.action_homeFragment_to_viewDetailsFragment)
     }
 
 

@@ -94,10 +94,7 @@ fun Fragment.navigate(actionId: Int, bundle: Bundle?, navOption: NavOptions?) {
     findNavController().navigate(actionId, bundle, navOption)
 }
 
-fun Fragment.navigateToDestination(movieId: String, actionId: Int) {
-    val bundle = Bundle().apply {
-        putString(ID, movieId)
-    }
+fun Fragment.navigateToDestination(bundle: Bundle? = null, actionId: Int) {
     val navOption = NavOptions.Builder()
         .setEnterAnim(R.anim.fade_in)
         .setExitAnim(R.anim.fade_out)
