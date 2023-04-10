@@ -1,23 +1,27 @@
 package com.shakiv.husain.disneywatch.ui.ui.search
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.databinding.LayoutSearchFragmentBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
-import com.shakiv.husain.disneywatch.util.*
+import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
+import com.shakiv.husain.disneywatch.util.doOnDebouncedTextChange
+import com.shakiv.husain.disneywatch.util.navigateToDestination
+import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
+import com.shakiv.husain.disneywatch.util.toStringOrEmpty
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -122,13 +126,18 @@ class SearchFragment : BaseFragment() {
     }
 
     private fun initAdapters() {
-        moviesAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
-        tvShowAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
-        collectionsAdapter = MovieAdapter(onItemClicked = ::onItemClicked)
+        moviesAdapter = MovieAdapter(onItemClicked = { id -> onItemClicked(id, MediaType.MOVIE) })
+        tvShowAdapter = MovieAdapter(onItemClicked = { id -> onItemClicked(id, MediaType.TV) })
+        collectionsAdapter =
+            MovieAdapter(onItemClicked = { id -> onItemClicked(id, MediaType.COLLECTION) })
     }
 
-    private fun onItemClicked(id: String) {
-        navigateToDestination(movieId = id, actionId = R.id.action_global_viewDetails)
+    private fun onItemClicked(id: String, type: MediaType) {
+        val bundle = bundleOf(
+            ID to id,
+            MEDIA_TYPE to type
+        )
+        navigateToDestination(bundle, actionId = R.id.action_global_viewDetails)
     }
 
     override fun initViewModels() {

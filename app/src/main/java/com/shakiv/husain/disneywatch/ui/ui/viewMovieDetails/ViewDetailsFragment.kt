@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
+import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
@@ -24,6 +25,7 @@ import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
 import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
+import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.AppConstants.TWO_SECONDS_IN_MILLIS
 import com.shakiv.husain.disneywatch.util.AppConstants.ZERO
 import kotlinx.coroutines.flow.collectLatest
@@ -49,13 +51,32 @@ class ViewDetailsFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val id = arguments?.getString(ID) ?: ""
+        val arguments = requireArguments()
+        val id = arguments.getString(ID).toStringOrEmpty()
+        val type = arguments.getSerializable(MEDIA_TYPE) as? MediaType
+
+//        val id = arguments?.getString(ID) ?: ""
 
         autoScrollHandler = Handler(Looper.getMainLooper())
 
         initViewModels()
         initAdapter()
-        fetchMovieDetails(id)
+
+        fetchMediaDetails(id, type)
+    }
+
+    private fun fetchMediaDetails(id: String, type: MediaType?) {
+
+        when (type) {
+            MediaType.MOVIE -> {
+                fetchMovieDetails(id)
+            }
+            MediaType.TV -> {}
+            MediaType.COLLECTION -> {}
+            else -> {
+            }
+        }
+
     }
 
 
