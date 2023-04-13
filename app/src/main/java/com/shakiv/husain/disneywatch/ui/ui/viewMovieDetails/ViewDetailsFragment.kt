@@ -55,8 +55,6 @@ class ViewDetailsFragment : BaseFragment() {
         val id = arguments.getString(ID).toStringOrEmpty()
         val type = arguments.getSerializable(MEDIA_TYPE) as? MediaType
 
-//        val id = arguments?.getString(ID) ?: ""
-
         autoScrollHandler = Handler(Looper.getMainLooper())
 
         initViewModels()
@@ -129,14 +127,6 @@ class ViewDetailsFragment : BaseFragment() {
             clipToPadding = false
             clipChildren = false
 
-//            val activeColor = context.getColorFromAttr(R.attr.vibrantOrange)
-//            val inactiveColor = context.getColorFromAttr(R.attr.subtitleColor)
-//            val radius = resources.getDimension(R.dimen._4sdp)
-//            val padding = resources.getDimension(R.dimen._4sdp)
-//
-//            val dotDecoration = DotDecoration(activeColor, inactiveColor, radius, padding)
-//            addItemDecoration(dotDecoration)
-
             getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -175,12 +165,6 @@ class ViewDetailsFragment : BaseFragment() {
             recyclerView.adapter = castAdapter
             recyclerView.setLinearLayoutManager(context ?: return, LinearLayoutManager.HORIZONTAL)
         }
-
-//        binding.viewPagerBottom.apply {
-//            viewPager.adapter= videoAdapter
-//            recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL,false)
-//        }
-
     }
 
     val updateRunnable = Runnable {
@@ -254,7 +238,6 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val previewResponse = it.data?.previewList ?: emptyList()
                         logd(previewResponse.toString())
-
                         videoAdapter.submitList(previewResponse)
 
                     }

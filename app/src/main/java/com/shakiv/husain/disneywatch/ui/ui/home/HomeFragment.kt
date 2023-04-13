@@ -269,11 +269,6 @@ class HomeFragment : BaseFragment() {
 
     }
 
-    override fun bindObservers() {
-        super.bindObservers()
-    }
-
-
     override fun initViewModels() {
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
         mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
