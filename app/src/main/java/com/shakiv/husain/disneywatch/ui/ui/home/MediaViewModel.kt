@@ -53,6 +53,10 @@ class MediaViewModel @Inject constructor(
     }
 
 
+    fun getCollectionDetails(collectionId : String ) : Flow<Resource<MovieDetails>>{
+        return repository.getCollectionDetails(collectionId)
+    }
+
     fun getMovieImages(movieId: String): Flow<Resource<ImageResponse>> {
         return repository.getMovieImages(movieId)
     }

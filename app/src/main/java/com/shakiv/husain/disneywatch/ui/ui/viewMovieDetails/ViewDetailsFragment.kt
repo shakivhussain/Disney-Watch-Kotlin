@@ -70,7 +70,9 @@ class ViewDetailsFragment : BaseFragment() {
                 fetchMovieDetails(id)
             }
             MediaType.TV -> {}
-            MediaType.COLLECTION -> {}
+            MediaType.COLLECTION -> {
+                fetchMovieDetails(id)
+            }
             else -> {
             }
         }
@@ -180,6 +182,25 @@ class ViewDetailsFragment : BaseFragment() {
     }
 
     private fun fetchMovieDetails(id: String) {
+
+
+        lifecycleScope.launch {
+
+            viewModel.getCollectionDetails(id).collectLatest {
+
+
+                when(it){
+                    is Resource.Success->{
+                    }
+                    is Resource.Loading->{
+                    }
+                    else -> {}
+                }
+
+
+            }
+
+        }
 
         lifecycleScope.launch {
             viewModel.getMovieDetails(id).collectLatest {

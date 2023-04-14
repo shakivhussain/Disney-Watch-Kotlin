@@ -7,6 +7,7 @@ import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
+import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_COLLECTION_ID
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_MOVIE_ID_PATH
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_PAGE
@@ -46,6 +47,12 @@ interface NetworkService {
         @Query(KEY_API) apiKey: String
     ): Response<MovieDetails>
 
+
+    @GET("collection/{$KEY_COLLECTION_ID}")
+    suspend fun getCollectionDetails(
+        @Path(KEY_COLLECTION_ID) collectionId: String,
+        @Query(KEY_API) apiKey: String
+    ):Response<MovieDetails>
 
     @GET("movie/{$KEY_MOVIE_ID_PATH}/images")
     suspend fun getMovieImages(
