@@ -103,6 +103,28 @@ class NetworkRepository @Inject constructor(
         }
     }
 
+    fun getCollectionDetails(collectionId: String) = flow<Resource<MovieDetails>> {
+        emit(Resource.Loading())
+        val errorMsg = "Error in collection details."
+        try {
+            val data = NetworkRequest.process {
+                networkService.getCollectionDetails(collectionId = collectionId, apiKey = API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results.orThrow(errorMsg)
+                    }
+                    is ApiResponse.Failure -> {
+                        throwError(errorMsg)
+                    }
+                }
+            }
+            emit(Resource.Success(data))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, e.localizedMessage))
+        }
+    }
 
     fun getMovieImages(movieId: String) = flow<Resource<ImageResponse>> {
         emit(Resource.Loading())
@@ -190,8 +212,8 @@ class NetworkRepository @Inject constructor(
 
 
     fun searchCollection(query: String): Flow<PagingData<Movie>> {
-        val config = PagingConfig(20,4,true,20)
-        return Pager(config){
+        val config = PagingConfig(20, 4, true, 20)
+        return Pager(config) {
             CollectionsPagingSource(query = query, service = networkService)
         }.flow
     }
