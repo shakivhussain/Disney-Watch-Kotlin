@@ -54,9 +54,4 @@ class MainActivity : AppCompatActivity() {
     private fun hideActionBar() {
         (this as AppCompatActivity).supportActionBar?.hide()
     }
-
-    private fun initViewModel() {
-//        (application as DisneyApplication).appComponent.inject(this)
-//        viewModel = ViewModelProvider(this, mainViewModelFactory)[MovieViewModel::class.java]
-    }
 }
