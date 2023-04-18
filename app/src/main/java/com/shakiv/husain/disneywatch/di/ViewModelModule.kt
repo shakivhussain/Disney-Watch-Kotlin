@@ -1,6 +1,7 @@
 package com.shakiv.husain.disneywatch.di
 
 import androidx.lifecycle.ViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
 import dagger.Binds
 import dagger.Module
@@ -15,6 +16,12 @@ abstract class ViewModelModule {
     @Binds
     @ClassKey(MediaViewModel::class)
     @IntoMap
-    abstract fun mainViewModel(mediaViewModel: MediaViewModel) : ViewModel
+    abstract fun mainViewModel(mediaViewModel: MediaViewModel): ViewModel
+
+    @Binds
+    @ClassKey(CollectionViewModel::class)
+    @IntoMap
+    abstract fun collectionViewModel(collectionViewModel: CollectionViewModel): ViewModel
+
 
 }

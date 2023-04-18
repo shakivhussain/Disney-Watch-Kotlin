@@ -21,6 +21,7 @@ import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.*
+import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
 import com.shakiv.husain.disneywatch.util.*
@@ -37,6 +38,7 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var binding: FragmentViewDetailsBinding
 
     private lateinit var viewModel: MediaViewModel
+    private lateinit var collectionViewModel: CollectionViewModel
     private lateinit var horizontalImageAdapter: HorizontalImageAdapter
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
     private lateinit var castAdapter: CastAdapter
@@ -269,7 +271,7 @@ class ViewDetailsFragment : BaseFragment() {
 
 
         lifecycleScope.launch {
-            viewModel.getCollectionImages(id).collectLatest {
+            collectionViewModel.getCollectionImages(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val imageResponse = it.data
@@ -321,6 +323,7 @@ class ViewDetailsFragment : BaseFragment() {
         super.initViewModels()
         (activity?.application as DisneyApplication).appComponent.inject(this)
         viewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
+        collectionViewModel = ViewModelProvider(this, factory)[CollectionViewModel::class.java]
 
     }
 

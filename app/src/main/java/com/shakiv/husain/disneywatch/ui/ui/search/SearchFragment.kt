@@ -14,6 +14,7 @@ import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.databinding.LayoutSearchFragmentBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
+import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
@@ -32,6 +33,7 @@ class SearchFragment : BaseFragment() {
 
     @Inject lateinit var factory: MainViewModelFactory
     lateinit var mediaViewModel: MediaViewModel
+    lateinit var collectionViewModel: CollectionViewModel
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
     lateinit var collectionsAdapter: MovieAdapter
@@ -46,7 +48,7 @@ class SearchFragment : BaseFragment() {
 
         mediaViewModel.searchMovies(query)
         mediaViewModel.searchTvShow(query)
-        mediaViewModel.searchCollections(query)
+        collectionViewModel.searchCollections(query)
     }
 
     override fun onCreateView(
@@ -119,7 +121,7 @@ class SearchFragment : BaseFragment() {
         }
 
         lifecycleScope.launch {
-            mediaViewModel.collectionPagingSource.collectLatest {
+            collectionViewModel.collectionPagingSource.collectLatest {
                 collectionsAdapter.submitData(it)
             }
         }
@@ -144,5 +146,6 @@ class SearchFragment : BaseFragment() {
         super.initViewModels()
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
         mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
+        collectionViewModel = ViewModelProvider(this, factory)[CollectionViewModel::class.java]
     }
 }

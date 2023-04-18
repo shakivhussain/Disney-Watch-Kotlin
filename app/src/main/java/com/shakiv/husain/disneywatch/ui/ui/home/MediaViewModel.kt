@@ -100,17 +100,17 @@ class MediaViewModel @Inject constructor(
     fun searchCollections(query: String) {
         viewModelScope.launch {
             repository
-                .searchCollection(query)
-                .cachedIn(viewModelScope)
-                .collectLatest {
-                    _collectionPagingData.emit(it)
-                }
+//                .searchCollection(query)
+//                .cachedIn(viewModelScope)
+//                .collectLatest {
+//                    _collectionPagingData.emit(it)
+//                }
         }
     }
 
 
-    fun getCollectionImages(collectionId: String): Flow<Resource<ImageResponse>> {
-        return repository.getCollectionsImages(collectionId)
-    }
+//    fun getCollectionImages(collectionId: String): Flow<Resource<ImageResponse>> {
+////        return repository.getCollectionsImages(collectionId)
+//    }
 
 }
