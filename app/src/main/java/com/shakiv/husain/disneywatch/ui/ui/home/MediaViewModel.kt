@@ -97,7 +97,6 @@ class MediaViewModel @Inject constructor(
         }
     }
 
-
     fun searchCollections(query: String) {
         viewModelScope.launch {
             repository
@@ -108,4 +107,10 @@ class MediaViewModel @Inject constructor(
                 }
         }
     }
+
+
+    fun getCollectionImages(collectionId: String): Flow<Resource<ImageResponse>> {
+        return repository.getCollectionsImages(collectionId)
+    }
+
 }

@@ -52,7 +52,7 @@ interface NetworkService {
     suspend fun getCollectionDetails(
         @Path(KEY_COLLECTION_ID) collectionId: String,
         @Query(KEY_API) apiKey: String
-    ):Response<MovieDetails>
+    ): Response<MovieDetails>
 
     @GET("movie/{$KEY_MOVIE_ID_PATH}/images")
     suspend fun getMovieImages(
@@ -101,6 +101,12 @@ interface NetworkService {
         @Query(KEY_PAGE) page: Int,
         @Query(KEY_API) apiKey: String
     ): Response<BaseResponse<List<Movie>>>
+
+    @GET("collection/{$KEY_COLLECTION_ID}/images")
+    suspend fun getCollectionsImages(
+        @Path(KEY_COLLECTION_ID) collectionId: String,
+        @Query(KEY_API) apiKey: String
+    ): Response<ImageResponse>
 
 
 }
