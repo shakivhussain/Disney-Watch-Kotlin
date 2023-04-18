@@ -189,10 +189,10 @@ class ViewDetailsFragment : BaseFragment() {
             viewModel.getCollectionDetails(id).collectLatest {
 
 
-                when(it){
-                    is Resource.Success->{
+                when (it) {
+                    is Resource.Success -> {
                     }
-                    is Resource.Loading->{
+                    is Resource.Loading -> {
                     }
                     else -> {}
                 }
@@ -221,7 +221,7 @@ class ViewDetailsFragment : BaseFragment() {
             viewModel.getMovieImages(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        val imageList = it.data?.images ?: emptyList()
+                        val imageList = it.data?.backdrops ?: emptyList()
                         horizontalImageAdapter.submitList(imageList)
                     }
                     is Resource.Loading -> {}
@@ -267,6 +267,19 @@ class ViewDetailsFragment : BaseFragment() {
             }
         }
 
+
+        lifecycleScope.launch {
+            viewModel.getCollectionImages(id).collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val imageResponse = it.data
+                        logd("Collection Images : $imageResponse","GetCollectionImages")
+                    }
+                    is Resource.Loading -> {}
+                    is Resource.Failure -> {}
+                }
+            }
+        }
     }
 
     private fun bindMovieDetailsData(movieDetails: MovieDetails?) {

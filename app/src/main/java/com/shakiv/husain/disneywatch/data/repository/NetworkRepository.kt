@@ -218,4 +218,29 @@ class NetworkRepository @Inject constructor(
         }.flow
     }
 
+
+    fun getCollectionsImages(collectionId: String) = flow<Resource<ImageResponse>> {
+        emit(Resource.Loading())
+        val message = "Error in Collection Images."
+        try {
+            val imageResponse = NetworkRequest.process {
+                networkService.getCollectionsImages(collectionId, API_KEY)
+            }.run {
+
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results.orThrow(message)
+                    }
+                    is ApiResponse.Failure -> {
+                        throwError(message = message)
+                    }
+                }
+            }
+
+            emit(Resource.Success(imageResponse))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(null, e.message))
+        }
+    }
 }
