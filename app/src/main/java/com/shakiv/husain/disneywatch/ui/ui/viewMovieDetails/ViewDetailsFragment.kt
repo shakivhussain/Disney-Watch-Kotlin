@@ -24,6 +24,7 @@ import com.shakiv.husain.disneywatch.ui.adapter.*
 import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
 import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
@@ -37,8 +38,9 @@ class ViewDetailsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentViewDetailsBinding
 
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var movieViewModel: MovieViewModel
     private lateinit var collectionViewModel: CollectionViewModel
+    private lateinit var tvShowViewModel: TvShowViewModel
     private lateinit var horizontalImageAdapter: HorizontalImageAdapter
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
     private lateinit var castAdapter: CastAdapter
@@ -71,11 +73,66 @@ class ViewDetailsFragment : BaseFragment() {
             MediaType.MOVIE -> {
                 fetchMovieDetails(id)
             }
-            MediaType.TV -> {}
+            MediaType.TV -> {
+                fetchTvDetails(id)
+            }
             MediaType.COLLECTION -> {
-                fetchMovieDetails(id)
+                fetchCollectionDetails(id)
             }
             else -> {
+            }
+        }
+
+    }
+
+    private fun fetchCollectionDetails(id: String) {
+        lifecycleScope.launch {
+            collectionViewModel.getCollectionDetails(id).collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        movieDetails = it.data
+                        bindMovieDetailsData(movieDetails)
+                    }
+                    is Resource.Loading -> {
+                    }
+                    else -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            collectionViewModel.getCollectionImages(id).collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val imageResponse = it.data
+                        logd("Collection Images : $imageResponse", "GetCollectionImages")
+                    }
+                    is Resource.Loading -> {}
+                    is Resource.Failure -> {}
+                }
+            }
+        }
+
+    }
+
+    private fun fetchTvDetails(id: String) {
+        tvShowViewModel.getTvShowDetails(id)
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowDetails.collectLatest {
+
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowDetails = it.data
+                        bindMovieDetailsData(tvShowDetails)
+                        logd(" Success getTvShowData : ${it.data}")
+                    }
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Failure -> {
+                    }
+                    else -> {}
+                }
             }
         }
 
@@ -186,24 +243,11 @@ class ViewDetailsFragment : BaseFragment() {
     private fun fetchMovieDetails(id: String) {
 
 
-        lifecycleScope.launch {
-
-            collectionViewModel.getCollectionDetails(id).collectLatest {
-                when (it) {
-                    is Resource.Success -> {
-                    }
-                    is Resource.Loading -> {
-                    }
-                    else -> {}
-                }
 
 
-            }
-
-        }
 
         lifecycleScope.launch {
-            viewModel.getMovieDetails(id).collectLatest {
+            movieViewModel.getMovieDetails(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         movieDetails = it.data
@@ -218,7 +262,7 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.getMovieImages(id).collectLatest {
+            movieViewModel.getMovieImages(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val imageList = it.data?.backdrops ?: emptyList()
@@ -231,7 +275,7 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.getCasts(movieId = id).collectLatest {
+            movieViewModel.getCasts(movieId = id).collectLatest {
 
                 when (it) {
                     is Resource.Success -> {
@@ -245,7 +289,7 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.getRecommended(id).collectLatest {
+            movieViewModel.getRecommended(id).collectLatest {
                 recommendedMovieAdapter.submitData(it)
 
             }
@@ -253,7 +297,7 @@ class ViewDetailsFragment : BaseFragment() {
 
 
         lifecycleScope.launch {
-            viewModel.getMoviesPreview(id).collectLatest {
+            movieViewModel.getMoviesPreview(id).collectLatest {
                 when (it) {
                     is Resource.Loading -> {}
                     is Resource.Success -> {
@@ -268,18 +312,6 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
 
-        lifecycleScope.launch {
-            collectionViewModel.getCollectionImages(id).collectLatest {
-                when (it) {
-                    is Resource.Success -> {
-                        val imageResponse = it.data
-                        logd("Collection Images : $imageResponse","GetCollectionImages")
-                    }
-                    is Resource.Loading -> {}
-                    is Resource.Failure -> {}
-                }
-            }
-        }
     }
 
     private fun bindMovieDetailsData(movieDetails: MovieDetails?) {
@@ -320,8 +352,9 @@ class ViewDetailsFragment : BaseFragment() {
     override fun initViewModels() {
         super.initViewModels()
         (activity?.application as DisneyApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
         collectionViewModel = ViewModelProvider(this, factory)[CollectionViewModel::class.java]
+        tvShowViewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
 
     }
 
