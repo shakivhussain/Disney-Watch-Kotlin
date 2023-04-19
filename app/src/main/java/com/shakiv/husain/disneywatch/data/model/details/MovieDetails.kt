@@ -3,8 +3,8 @@ package com.shakiv.husain.disneywatch.data.model.details
 import com.google.gson.annotations.SerializedName
 
 data class MovieDetails(
-    @SerializedName("adult") val adult: Boolean,
-    @SerializedName("backdrop_path") val backdrop_path: String,
+    @SerializedName("adult") val adult: Boolean?=false,
+    @SerializedName("backdrop_path") val backdrop_path: String?="",
     @SerializedName("budget") val budget: Int?=0,
     @SerializedName("genres") val genres: List<Genre>?= emptyList(),
     @SerializedName("homepage") val homepage: String?="",
