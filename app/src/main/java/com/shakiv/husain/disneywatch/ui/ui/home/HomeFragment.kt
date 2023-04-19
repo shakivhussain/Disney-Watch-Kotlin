@@ -40,7 +40,7 @@ class HomeFragment : BaseFragment() {
 
     @Inject
     lateinit var factory: MainViewModelFactory
-    lateinit var mediaViewModel: MediaViewModel
+    lateinit var movieViewModel: MovieViewModel
 
     private lateinit var popularMoviesAdapter: MovieAdapter
     private lateinit var upcomingMovieAdapter: MovieAdapter
@@ -99,10 +99,8 @@ class HomeFragment : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (mainHandler != null) {
-                        mainHandler.removeCallbacks(update)
-                        mainHandler.postDelayed(update, 2000)
-                    }
+                    mainHandler.removeCallbacks(update)
+                    mainHandler.postDelayed(update, 2000)
                 }
             })
         }
@@ -190,10 +188,8 @@ class HomeFragment : BaseFragment() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
 
-                    if (mainHandler != null) {
-                        mainHandler.removeCallbacks(update)
-                        mainHandler.postDelayed(update, 2000)
-                    }
+                    mainHandler.removeCallbacks(update)
+                    mainHandler.postDelayed(update, 2000)
                 }
             })
         }
@@ -207,25 +203,25 @@ class HomeFragment : BaseFragment() {
         super.bindObservers()
 
         lifecycleScope.launch {
-            mediaViewModel.getTrendingMovies().collectLatest {
+            movieViewModel.getTrendingMovies().collectLatest {
                 verticalSliderAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            mediaViewModel.getUpComingMovies().collectLatest {
+            movieViewModel.getUpComingMovies().collectLatest {
                 upcomingMovieAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            mediaViewModel.getUpComingMovies().collectLatest {
+            movieViewModel.getUpComingMovies().collectLatest {
                 horizontalAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            mediaViewModel.getPopularMovies().collectLatest {
+            movieViewModel.getPopularMovies().collectLatest {
                 it.let {
                     popularMoviesAdapter.submitData(it)
                 }
@@ -271,6 +267,6 @@ class HomeFragment : BaseFragment() {
 
     override fun initViewModels() {
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
-        mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
+        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
     }
 }

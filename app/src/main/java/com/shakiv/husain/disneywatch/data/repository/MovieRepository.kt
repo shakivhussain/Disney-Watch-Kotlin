@@ -3,7 +3,7 @@ package com.shakiv.husain.disneywatch.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.shakiv.husain.disneywatch.data.api.NetworkService
+import com.shakiv.husain.disneywatch.data.api.MovieService
 import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
@@ -20,10 +20,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class NetworkRepository @Inject constructor(
-    private val networkService: NetworkService
+class MovieRepository @Inject constructor(
+    private val networkService: MovieService
 ) {
-
 
     suspend fun topRatedMovies(): Flow<Resource<List<Movie>>> = flow {
         this.emit(Resource.Loading(data = null))
@@ -103,28 +102,7 @@ class NetworkRepository @Inject constructor(
         }
     }
 
-    fun getCollectionDetails(collectionId: String) = flow<Resource<MovieDetails>> {
-        emit(Resource.Loading())
-        val errorMsg = "Error in collection details."
-        try {
-            val data = NetworkRequest.process {
-                networkService.getCollectionDetails(collectionId = collectionId, apiKey = API_KEY)
-            }.run {
-                when (this) {
-                    is ApiResponse.Success -> {
-                        results.orThrow(errorMsg)
-                    }
-                    is ApiResponse.Failure -> {
-                        throwError(errorMsg)
-                    }
-                }
-            }
-            emit(Resource.Success(data))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emit(Resource.Failure(data = null, e.localizedMessage))
-        }
-    }
+
 
     fun getMovieImages(movieId: String) = flow<Resource<ImageResponse>> {
         emit(Resource.Loading())
@@ -202,45 +180,4 @@ class NetworkRepository @Inject constructor(
         }.flow
     }
 
-
-    fun searchTvShows(query: String): Flow<PagingData<Movie>> {
-        val config = PagingConfig(20, 4, true, 20)
-        return Pager(config) {
-            TvShowPagingSource(query = query, service = networkService)
-        }.flow
-    }
-
-
-    fun searchCollection(query: String): Flow<PagingData<Movie>> {
-        val config = PagingConfig(20, 4, true, 20)
-        return Pager(config) {
-            CollectionsPagingSource(query = query, service = networkService)
-        }.flow
-    }
-
-
-    fun getCollectionsImages(collectionId: String) = flow<Resource<ImageResponse>> {
-        emit(Resource.Loading())
-        val message = "Error in Collection Images."
-        try {
-            val imageResponse = NetworkRequest.process {
-                networkService.getCollectionsImages(collectionId, API_KEY)
-            }.run {
-
-                when (this) {
-                    is ApiResponse.Success -> {
-                        results.orThrow(message)
-                    }
-                    is ApiResponse.Failure -> {
-                        throwError(message = message)
-                    }
-                }
-            }
-
-            emit(Resource.Success(imageResponse))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emit(Resource.Failure(null, e.message))
-        }
-    }
 }

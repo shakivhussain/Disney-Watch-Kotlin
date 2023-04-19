@@ -2,7 +2,7 @@ package com.shakiv.husain.disneywatch.ui.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.shakiv.husain.disneywatch.data.api.NetworkService
+import com.shakiv.husain.disneywatch.data.api.CollectionService
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
@@ -12,7 +12,7 @@ import com.shakiv.husain.disneywatch.util.throwError
 
 class CollectionsPagingSource(
     private val query: String,
-    private val service: NetworkService
+    private val service: CollectionService
 ) : PagingSource<Int, Movie>() {
 
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
