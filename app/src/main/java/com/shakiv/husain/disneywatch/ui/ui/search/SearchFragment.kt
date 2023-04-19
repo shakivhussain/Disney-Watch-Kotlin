@@ -16,7 +16,8 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
-import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.doOnDebouncedTextChange
@@ -32,7 +33,8 @@ class SearchFragment : BaseFragment() {
     lateinit var binding: LayoutSearchFragmentBinding
 
     @Inject lateinit var factory: MainViewModelFactory
-    lateinit var mediaViewModel: MediaViewModel
+    lateinit var movieViewModel: MovieViewModel
+    lateinit var tvShowViewModel: TvShowViewModel
     lateinit var collectionViewModel: CollectionViewModel
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
@@ -46,8 +48,8 @@ class SearchFragment : BaseFragment() {
 
     private fun searchQuery(query: String) {
 
-        mediaViewModel.searchMovies(query)
-        mediaViewModel.searchTvShow(query)
+        movieViewModel.searchMovies(query)
+        tvShowViewModel.searchTvShow(query)
         collectionViewModel.searchCollections(query)
     }
 
@@ -109,13 +111,13 @@ class SearchFragment : BaseFragment() {
         super.bindObservers()
 
         lifecycleScope.launch {
-            mediaViewModel.moviesPagingData.collectLatest {
+            movieViewModel.moviesPagingData.collectLatest {
                 moviesAdapter.submitData(it)
             }
         }
 
         lifecycleScope.launch {
-            mediaViewModel.tvShowsPagingData.collectLatest {
+            tvShowViewModel.tvShowsPagingData.collectLatest {
                 tvShowAdapter.submitData(it)
             }
         }
@@ -145,7 +147,8 @@ class SearchFragment : BaseFragment() {
     override fun initViewModels() {
         super.initViewModels()
         (this.activity?.application as DisneyApplication).appComponent.inject(this)
-        mediaViewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
+        movieViewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
         collectionViewModel = ViewModelProvider(this, factory)[CollectionViewModel::class.java]
+        tvShowViewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
     }
 }

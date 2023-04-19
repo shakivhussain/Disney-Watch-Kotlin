@@ -10,7 +10,7 @@ import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.Resource
-import com.shakiv.husain.disneywatch.data.repository.NetworkRepository
+import com.shakiv.husain.disneywatch.data.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,15 +18,12 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MediaViewModel @Inject constructor(
-    private val repository: NetworkRepository
+class MovieViewModel @Inject constructor(
+    private val repository: MovieRepository
 ) : ViewModel() {
 
     private val _moviesPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
     val moviesPagingData = _moviesPagingData.asStateFlow()
-
-    private val _tvShowsPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
-    val tvShowsPagingData = _tvShowsPagingData.asStateFlow()
 
 
     private val _collectionPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
@@ -52,10 +49,6 @@ class MediaViewModel @Inject constructor(
         return repository.getMovieDetails(movieId = movieId)
     }
 
-
-    fun getCollectionDetails(collectionId : String ) : Flow<Resource<MovieDetails>>{
-        return repository.getCollectionDetails(collectionId)
-    }
 
     fun getMovieImages(movieId: String): Flow<Resource<ImageResponse>> {
         return repository.getMovieImages(movieId)
@@ -85,32 +78,5 @@ class MediaViewModel @Inject constructor(
         }
     }
 
-
-    fun searchTvShow(query: String) {
-        viewModelScope.launch {
-            repository
-                .searchTvShows(query)
-                .cachedIn(viewModelScope)
-                .collectLatest {
-                    _tvShowsPagingData.emit(it)
-                }
-        }
-    }
-
-    fun searchCollections(query: String) {
-        viewModelScope.launch {
-            repository
-//                .searchCollection(query)
-//                .cachedIn(viewModelScope)
-//                .collectLatest {
-//                    _collectionPagingData.emit(it)
-//                }
-        }
-    }
-
-
-//    fun getCollectionImages(collectionId: String): Flow<Resource<ImageResponse>> {
-////        return repository.getCollectionsImages(collectionId)
-//    }
 
 }

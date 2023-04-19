@@ -1,6 +1,7 @@
 package com.shakiv.husain.disneywatch.data.api
 
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
+import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.util.ApiConstants
@@ -27,5 +28,13 @@ interface CollectionService {
         @Path(KEY_COLLECTION_ID) collectionId: String,
         @Query(KEY_API) apiKey: String
     ): Response<ImageResponse>
+
+
+    @GET("collection/{$KEY_COLLECTION_ID}")
+    suspend fun getCollectionDetails(
+        @Path(KEY_COLLECTION_ID) collectionId: String,
+        @Query(KEY_API) apiKey: String
+    ): Response<MovieDetails>
+
 
 }

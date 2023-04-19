@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.Resource
@@ -34,6 +35,9 @@ class CollectionViewModel @Inject constructor(
         }
     }
 
+    fun getCollectionDetails(collectionId : String ) : Flow<Resource<MovieDetails>>{
+        return collectionRepository.getCollectionDetails(collectionId)
+    }
     fun getCollectionImages(collectionId: String): Flow<Resource<ImageResponse>> {
         return collectionRepository.getCollectionsImages(collectionId)
     }

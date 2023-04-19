@@ -23,7 +23,7 @@ import com.shakiv.husain.disneywatch.ui.BaseFragment
 import com.shakiv.husain.disneywatch.ui.adapter.*
 import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
-import com.shakiv.husain.disneywatch.ui.ui.home.MediaViewModel
+import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
@@ -37,7 +37,7 @@ class ViewDetailsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentViewDetailsBinding
 
-    private lateinit var viewModel: MediaViewModel
+    private lateinit var viewModel: MovieViewModel
     private lateinit var collectionViewModel: CollectionViewModel
     private lateinit var horizontalImageAdapter: HorizontalImageAdapter
     private lateinit var horizontalSliderAdapter: HorizontalSliderAdapter
@@ -188,9 +188,7 @@ class ViewDetailsFragment : BaseFragment() {
 
         lifecycleScope.launch {
 
-            viewModel.getCollectionDetails(id).collectLatest {
-
-
+            collectionViewModel.getCollectionDetails(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
                     }
@@ -322,7 +320,7 @@ class ViewDetailsFragment : BaseFragment() {
     override fun initViewModels() {
         super.initViewModels()
         (activity?.application as DisneyApplication).appComponent.inject(this)
-        viewModel = ViewModelProvider(this, factory)[MediaViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
         collectionViewModel = ViewModelProvider(this, factory)[CollectionViewModel::class.java]
 
     }

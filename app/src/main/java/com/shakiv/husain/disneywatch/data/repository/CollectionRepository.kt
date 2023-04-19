@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.shakiv.husain.disneywatch.data.api.CollectionService
+import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
@@ -41,6 +42,30 @@ class CollectionRepository @Inject constructor(private val collectionService: Co
         } catch (e: Exception) {
             e.printStackTrace()
             emit(Resource.Failure(null, e.message))
+        }
+    }
+
+
+    fun getCollectionDetails(collectionId: String) = flow<Resource<MovieDetails>> {
+        emit(Resource.Loading())
+        val errorMsg = "Error in collection details."
+        try {
+            val data = NetworkRequest.process {
+                collectionService.getCollectionDetails(collectionId = collectionId, apiKey = ApiConstants.API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results.orThrow(errorMsg)
+                    }
+                    is ApiResponse.Failure -> {
+                        throwError(errorMsg)
+                    }
+                }
+            }
+            emit(Resource.Success(data))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(data = null, e.localizedMessage))
         }
     }
 
