@@ -25,10 +25,6 @@ class MovieViewModel @Inject constructor(
     private val _moviesPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
     val moviesPagingData = _moviesPagingData.asStateFlow()
 
-
-    private val _collectionPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
-    val collectionPagingSource = _collectionPagingData.asStateFlow()
-
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return repository.getPopularMovies().cachedIn(viewModelScope)
     }
