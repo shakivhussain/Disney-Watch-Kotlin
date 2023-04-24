@@ -16,20 +16,31 @@ import androidx.viewpager2.widget.ViewPager2
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.MediaType
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
-import com.shakiv.husain.disneywatch.ui.adapter.*
+import com.shakiv.husain.disneywatch.ui.adapter.CastAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalImageAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalSliderAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.HorizontalVideoAdapter
+import com.shakiv.husain.disneywatch.ui.adapter.MovieAdapter
 import com.shakiv.husain.disneywatch.ui.ui.home.CollectionViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.MainViewModelFactory
 import com.shakiv.husain.disneywatch.ui.ui.home.MovieViewModel
 import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
-import com.shakiv.husain.disneywatch.util.*
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.AppConstants.TWO_SECONDS_IN_MILLIS
 import com.shakiv.husain.disneywatch.util.AppConstants.ZERO
+import com.shakiv.husain.disneywatch.util.ImageUtils
+import com.shakiv.husain.disneywatch.util.convertToFullUrl
+import com.shakiv.husain.disneywatch.util.getStringFromId
+import com.shakiv.husain.disneywatch.util.logd
+import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
+import com.shakiv.husain.disneywatch.util.toKNotation
+import com.shakiv.husain.disneywatch.util.toStringOrEmpty
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -73,12 +84,15 @@ class ViewDetailsFragment : BaseFragment() {
             MediaType.MOVIE -> {
                 fetchMovieDetails(id)
             }
+
             MediaType.TV -> {
                 fetchTvDetails(id)
             }
+
             MediaType.COLLECTION -> {
                 fetchCollectionDetails(id)
             }
+
             else -> {
             }
         }
@@ -93,8 +107,10 @@ class ViewDetailsFragment : BaseFragment() {
                         movieDetails = it.data
                         bindMovieDetailsData(movieDetails)
                     }
+
                     is Resource.Loading -> {
                     }
+
                     else -> {}
                 }
             }
@@ -104,9 +120,11 @@ class ViewDetailsFragment : BaseFragment() {
             collectionViewModel.getCollectionImages(id).collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        val imageResponse = it.data
-                        logd("Collection Images : $imageResponse", "GetCollectionImages")
+                        val backdrops = it.data?.backdrops ?: emptyList()
+                        horizontalImageAdapter.submitList(backdrops)
+
                     }
+
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
@@ -117,6 +135,8 @@ class ViewDetailsFragment : BaseFragment() {
 
     private fun fetchTvDetails(id: String) {
         tvShowViewModel.getTvShowDetails(id)
+        tvShowViewModel.getCredits(id)
+
 
         lifecycleScope.launch {
             tvShowViewModel.tvShowDetails.collectLatest {
@@ -127,13 +147,37 @@ class ViewDetailsFragment : BaseFragment() {
                         bindMovieDetailsData(tvShowDetails)
                         logd(" Success getTvShowData : ${it.data}")
                     }
+
                     is Resource.Loading -> {
                     }
+
                     is Resource.Failure -> {
                     }
+
                     else -> {}
                 }
             }
+        }
+
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowCredit.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowCredits = it.data?.cast?: emptyList()
+                        castAdapter.submitList(tvShowCredits)
+                    }
+
+                    is Resource.Loading -> {
+                    }
+
+                    is Resource.Failure -> {
+                    }
+
+                    else -> {}
+                }
+            }
+
         }
 
     }
@@ -243,9 +287,6 @@ class ViewDetailsFragment : BaseFragment() {
     private fun fetchMovieDetails(id: String) {
 
 
-
-
-
         lifecycleScope.launch {
             movieViewModel.getMovieDetails(id).collectLatest {
                 when (it) {
@@ -253,8 +294,10 @@ class ViewDetailsFragment : BaseFragment() {
                         movieDetails = it.data
                         bindMovieDetailsData(movieDetails)
                     }
+
                     is Resource.Loading -> {
                     }
+
                     is Resource.Failure -> {
                     }
                 }
@@ -268,6 +311,7 @@ class ViewDetailsFragment : BaseFragment() {
                         val imageList = it.data?.backdrops ?: emptyList()
                         horizontalImageAdapter.submitList(imageList)
                     }
+
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
@@ -282,6 +326,7 @@ class ViewDetailsFragment : BaseFragment() {
                         val castList = it.data?.cast ?: emptyList()
                         castAdapter.submitList(castList)
                     }
+
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
@@ -306,6 +351,7 @@ class ViewDetailsFragment : BaseFragment() {
                         videoAdapter.submitList(previewResponse)
 
                     }
+
                     is Resource.Failure -> {}
                 }
             }
@@ -336,6 +382,34 @@ class ViewDetailsFragment : BaseFragment() {
 
             }
         }
+    }
+
+    private fun bindMovieDetailsData(tvShowDetails: TvShowDetails?) {
+        if (tvShowDetails==null){
+            return
+        }
+
+        binding.apply {
+            tvShowDetails.let { tvshowDetails : TvShowDetails ->
+                tvMovieDesc.text = tvshowDetails.overview.orEmpty()
+                tvStatus.text = tvshowDetails.status.orEmpty()
+                tvVote.text = tvshowDetails.vote_count?.toKNotation().orEmpty()
+                tvReleaseDate.text = tvshowDetails.first_air_date.orEmpty()
+
+                tvTitle.text = tvshowDetails.name.orEmpty()
+                tvRelease.text = tvshowDetails.status.orEmpty()
+                tvReleaseDate.text = tvshowDetails.first_air_date.orEmpty()
+
+                tvRevenueTitle.text = resources.getString(R.string.type)
+                tvRevenue.text = tvshowDetails.type.orEmpty()
+
+                ImageUtils.setImage(
+                    tvshowDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
+                )
+            }
+        }
+
+
     }
 
     override fun bindListeners() {

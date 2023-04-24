@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
+import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.data.repository.TvShowRepository
@@ -19,8 +21,12 @@ class TvShowViewModel @Inject constructor(private val tvShowRepository: TvShowRe
     private val _tvShowsPagingData = MutableStateFlow<PagingData<Movie>>(PagingData.empty())
     val tvShowsPagingData = _tvShowsPagingData.asStateFlow()
 
-    private val _tvShowDetails = MutableStateFlow<Resource<MovieDetails>?>(null)
+    private val _tvShowDetails = MutableStateFlow<Resource<TvShowDetails>?>(null)
     val tvShowDetails = _tvShowDetails.asStateFlow()
+
+
+    private val _tvShowCredits = MutableStateFlow<Resource<CastResponse>?>(null)
+    val tvShowCredit = _tvShowCredits.asStateFlow()
 
     fun searchTvShow(query: String) {
         viewModelScope.launch {
@@ -39,6 +45,16 @@ class TvShowViewModel @Inject constructor(private val tvShowRepository: TvShowRe
                 .getTvShowDetails(tvShowId = tvShowId)
                 .collectLatest {
                     _tvShowDetails.emit(it)
+                }
+        }
+    }
+
+
+    fun getCredits(tvShowId: String){
+        viewModelScope.launch {
+            tvShowRepository.getCredits(tvShowId)
+                .collectLatest {
+                    _tvShowCredits.emit(it)
                 }
         }
     }

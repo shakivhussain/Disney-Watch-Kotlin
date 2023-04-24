@@ -1,7 +1,7 @@
 package com.shakiv.husain.disneywatch.data.api
 
 import com.shakiv.husain.disneywatch.data.model.BaseResponse
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.util.ApiConstants
