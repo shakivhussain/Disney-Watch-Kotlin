@@ -21,6 +21,7 @@ import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.doOnDebouncedTextChange
+import com.shakiv.husain.disneywatch.util.getCurrentVisiblePosition
 import com.shakiv.husain.disneywatch.util.logd
 import com.shakiv.husain.disneywatch.util.navigateToDestination
 import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
@@ -41,6 +42,9 @@ class SearchFragment : BaseFragment() {
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
     lateinit var collectionsAdapter: MovieAdapter
+    private var currentPositionOfMovieRecyclerView: Int = 0
+    private var currentPositionOfCollectionRecyclerView: Int = 0
+    private var currentPositionOfTvShowRecyclerView: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +59,25 @@ class SearchFragment : BaseFragment() {
         }
         initViewModels()
         initAdapters()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        currentPositionOfMovieRecyclerView =
+            binding.layoutMovies.recyclerView.getCurrentVisiblePosition()
+        currentPositionOfCollectionRecyclerView =
+            binding.layoutCollections.recyclerView.getCurrentVisiblePosition()
+        currentPositionOfTvShowRecyclerView =
+            binding.layoutTvShow.recyclerView.getCurrentVisiblePosition()
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+            binding.layoutMovies.recyclerView.scrollToPosition(currentPositionOfMovieRecyclerView)
+            binding.layoutCollections.recyclerView.scrollToPosition(currentPositionOfCollectionRecyclerView)
+            binding.layoutTvShow.recyclerView.scrollToPosition(currentPositionOfTvShowRecyclerView)
     }
 
     private fun searchQuery(query: String) {
