@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -79,6 +80,19 @@ class ViewDetailsFragment : BaseFragment() {
         fetchMediaDetails(id, type)
     }
 
+    val updateRunnable = Runnable {
+
+        var photosSliderCurrentPage = binding.topViewPager.currentItem
+        photosSliderCurrentPage += 1
+
+        if (photosSliderCurrentPage == horizontalImageAdapter.itemCount) {
+            photosSliderCurrentPage = ZERO
+        }
+
+        binding.topViewPager.setCurrentItem(photosSliderCurrentPage, true)
+    }
+
+
     private fun fetchMediaDetails(id: String, type: MediaType?) {
 
         when (type) {
@@ -123,9 +137,7 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val backdrops = it.data?.backdrops ?: emptyList()
                         horizontalImageAdapter.submitList(backdrops)
-
                     }
-
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
@@ -134,84 +146,6 @@ class ViewDetailsFragment : BaseFragment() {
 
     }
 
-    private fun fetchTvDetails(id: String) {
-        tvShowViewModel.getTvShowDetails(id)
-        tvShowViewModel.getCredits(id)
-        tvShowViewModel.getVideos(id)
-
-
-        lifecycleScope.launch {
-            tvShowViewModel.tvShowDetails.collectLatest {
-
-                when (it) {
-                    is Resource.Success -> {
-                        val tvShowDetails = it.data
-                        bindMovieDetailsData(tvShowDetails)
-
-
-                        logd(" Success getTvShowData : ${it.data}")
-                    }
-
-                    is Resource.Loading -> {
-                    }
-
-                    is Resource.Failure -> {
-                    }
-
-                    else -> {}
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            tvShowViewModel.tvShowCredit.collectLatest {
-                when (it) {
-                    is Resource.Success -> {
-                        val tvShowCredits = it.data?.cast?: emptyList()
-                        castAdapter.submitList(tvShowCredits)
-                        binding.recommendedLayout.root.isVisible = tvShowCredits.isNotEmpty()
-                    }
-
-                    is Resource.Loading -> {
-                    }
-
-                    is Resource.Failure -> {
-                    }
-
-                    else -> {}
-                }
-            }
-
-        }
-
-        lifecycleScope.launch {
-            tvShowViewModel.tvShowVideos.collectLatest {
-                when (it) {
-                    is Resource.Success -> {
-                        val tvShowVideos = it.data?.previewList?: emptyList()
-                        videoAdapter.submitList(tvShowVideos)
-                        binding.viewPagerBottom.root.isVisible = tvShowVideos.isNotEmpty()
-                    }
-
-                    is Resource.Loading -> {
-                    }
-
-                    is Resource.Failure -> {
-                    }
-
-                    else -> {}
-                }
-            }
-
-        }
-
-        lifecycleScope.launch {
-            tvShowViewModel.getRecommendedTvShows(id).collectLatest {
-                recommendedMovieAdapter.submitData(it)
-            }
-        }
-
-    }
 
 
     override fun onCreateView(
@@ -303,17 +237,6 @@ class ViewDetailsFragment : BaseFragment() {
         }
     }
 
-    val updateRunnable = Runnable {
-
-        var photosSliderCurrentPage = binding.topViewPager.currentItem
-        photosSliderCurrentPage += 1
-
-        if (photosSliderCurrentPage == horizontalImageAdapter.itemCount) {
-            photosSliderCurrentPage = ZERO
-        }
-
-        binding.topViewPager.setCurrentItem(photosSliderCurrentPage, true)
-    }
 
     private fun fetchMovieDetails(id: String) {
 
@@ -356,6 +279,7 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val castList = it.data?.cast ?: emptyList()
                         castAdapter.submitList(castList)
+                        binding.castLayout.root.isVisible = castList.isNotEmpty()
                     }
 
                     is Resource.Loading -> {}
@@ -367,7 +291,6 @@ class ViewDetailsFragment : BaseFragment() {
         lifecycleScope.launch {
             movieViewModel.getRecommended(id).collectLatest {
                 recommendedMovieAdapter.submitData(it)
-
             }
         }
 
@@ -378,7 +301,7 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Loading -> {}
                     is Resource.Success -> {
                         val previewResponse = it.data?.previewList ?: emptyList()
-                        logd(previewResponse.toString())
+                        binding.viewPagerBottom.root.isVisible = previewResponse.isNotEmpty()
                         videoAdapter.submitList(previewResponse)
 
                     }
@@ -390,6 +313,78 @@ class ViewDetailsFragment : BaseFragment() {
 
 
     }
+
+    private fun fetchTvDetails(id: String) {
+        tvShowViewModel.getTvShowDetails(id)
+        tvShowViewModel.getCredits(id)
+        tvShowViewModel.getVideos(id)
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowDetails.collectLatest {
+
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowDetails = it.data
+                        bindMovieDetailsData(tvShowDetails)
+                    }
+
+                    is Resource.Loading -> {
+                    }
+
+                    is Resource.Failure -> {
+                    }
+
+                    else -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowCredit.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowCredits = it.data?.cast?: emptyList()
+                        castAdapter.submitList(tvShowCredits)
+                        binding.castLayout.root.isVisible = tvShowCredits.isNotEmpty()
+                    }
+
+                    is Resource.Loading -> {
+                    }
+
+                    is Resource.Failure -> {
+                    }
+
+                    else -> {}
+                }
+            }
+
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowVideos.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowVideos = it.data?.previewList?: emptyList()
+                        videoAdapter.submitList(tvShowVideos)
+                        binding.viewPagerBottom.root.isVisible = tvShowVideos.isNotEmpty()
+                    }
+                    is Resource.Loading -> {
+                    }
+                    is Resource.Failure -> {
+                    }
+                    else -> {}
+                }
+            }
+
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.getRecommendedTvShows(id).collectLatest {
+                recommendedMovieAdapter.submitData(it)
+            }
+        }
+    }
+
 
     private fun bindMovieDetailsData(movieDetails: MovieDetails?) {
         if (movieDetails == null) {
@@ -457,6 +452,13 @@ class ViewDetailsFragment : BaseFragment() {
 
     override fun bindObservers() {
         super.bindObservers()
+
+        lifecycleScope.launch {
+            recommendedMovieAdapter.loadStateFlow.collectLatest {
+                binding.recommendedLayout.root.isVisible = it.refresh is LoadState.NotLoading && recommendedMovieAdapter.itemCount > 1
+            }
+        }
+
     }
 
     override fun initViewModels() {
