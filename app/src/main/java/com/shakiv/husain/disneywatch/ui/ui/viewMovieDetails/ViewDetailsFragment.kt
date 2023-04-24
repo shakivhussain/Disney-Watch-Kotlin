@@ -18,6 +18,7 @@ import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
+import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
@@ -136,6 +137,7 @@ class ViewDetailsFragment : BaseFragment() {
     private fun fetchTvDetails(id: String) {
         tvShowViewModel.getTvShowDetails(id)
         tvShowViewModel.getCredits(id)
+        tvShowViewModel.getVideos(id)
 
 
         lifecycleScope.launch {
@@ -145,6 +147,8 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val tvShowDetails = it.data
                         bindMovieDetailsData(tvShowDetails)
+
+
                         logd(" Success getTvShowData : ${it.data}")
                     }
 
@@ -159,13 +163,13 @@ class ViewDetailsFragment : BaseFragment() {
             }
         }
 
-
         lifecycleScope.launch {
             tvShowViewModel.tvShowCredit.collectLatest {
                 when (it) {
                     is Resource.Success -> {
                         val tvShowCredits = it.data?.cast?: emptyList()
                         castAdapter.submitList(tvShowCredits)
+                        binding.recommendedLayout.root.isVisible = tvShowCredits.isNotEmpty()
                     }
 
                     is Resource.Loading -> {
@@ -178,6 +182,33 @@ class ViewDetailsFragment : BaseFragment() {
                 }
             }
 
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowVideos.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowVideos = it.data?.previewList?: emptyList()
+                        videoAdapter.submitList(tvShowVideos)
+                        binding.viewPagerBottom.root.isVisible = tvShowVideos.isNotEmpty()
+                    }
+
+                    is Resource.Loading -> {
+                    }
+
+                    is Resource.Failure -> {
+                    }
+
+                    else -> {}
+                }
+            }
+
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.getRecommendedTvShows(id).collectLatest {
+                recommendedMovieAdapter.submitData(it)
+            }
         }
 
     }
@@ -406,6 +437,11 @@ class ViewDetailsFragment : BaseFragment() {
                 ImageUtils.setImage(
                     tvshowDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
                 )
+
+                val listOfBackDrop = listOf(
+                    Image(file_path = tvshowDetails.backdrop_path.orEmpty())
+                )
+                horizontalImageAdapter.submitList(listOfBackDrop)
             }
         }
 
@@ -433,6 +469,7 @@ class ViewDetailsFragment : BaseFragment() {
     }
 
     private fun onImageClick(image: String) {
+
     }
 
 }
