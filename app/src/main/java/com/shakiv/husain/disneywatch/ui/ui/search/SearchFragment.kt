@@ -21,9 +21,11 @@ import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.doOnDebouncedTextChange
+import com.shakiv.husain.disneywatch.util.logd
 import com.shakiv.husain.disneywatch.util.navigateToDestination
 import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
 import com.shakiv.husain.disneywatch.util.toStringOrEmpty
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,7 +36,7 @@ class SearchFragment : BaseFragment() {
 
     @Inject lateinit var factory: MainViewModelFactory
     lateinit var movieViewModel: MovieViewModel
-    lateinit var tvShowViewModel: TvShowViewModel
+    private lateinit var tvShowViewModel: TvShowViewModel
     lateinit var collectionViewModel: CollectionViewModel
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
@@ -42,6 +44,15 @@ class SearchFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            delay(400)
+            binding.layoutSearch.editText.doOnDebouncedTextChange(lifecycle, 500) { editable ->
+                val searchQuery = editable.toStringOrEmpty()
+                logd("searchQuery : $searchQuery", "CheckLog")
+                searchQuery(searchQuery)
+            }
+        }
         initViewModels()
         initAdapters()
     }
@@ -97,13 +108,6 @@ class SearchFragment : BaseFragment() {
 
     override fun bindListeners() {
         super.bindListeners()
-        binding.layoutSearch.editText.doOnDebouncedTextChange(lifecycle, 500) { editable ->
-
-            val searchQuery = editable.toStringOrEmpty()
-            searchQuery(searchQuery)
-
-        }
-
 
     }
 

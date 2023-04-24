@@ -240,7 +240,6 @@ class ViewDetailsFragment : BaseFragment() {
 
     private fun fetchMovieDetails(id: String) {
 
-
         lifecycleScope.launch {
             movieViewModel.getMovieDetails(id).collectLatest {
                 when (it) {
