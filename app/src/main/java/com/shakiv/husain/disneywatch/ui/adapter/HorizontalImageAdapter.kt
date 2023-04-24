@@ -50,7 +50,7 @@ class HorizontalImageAdapter(
             val image = getItem(position)
             _image = image
             layoutHorizontalSliderItemBinding.apply {
-                val imageUrl = image.file_path.convertToFullUrl()
+                val imageUrl = image.file_path?.convertToFullUrl()
                 ImageUtils.setImage(imageUrl, ivPoster)
                 container.isVisible = false
             }

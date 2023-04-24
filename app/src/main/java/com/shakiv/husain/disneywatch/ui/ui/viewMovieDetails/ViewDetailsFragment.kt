@@ -18,6 +18,7 @@ import com.shakiv.husain.disneywatch.R
 import com.shakiv.husain.disneywatch.data.model.MediaType
 import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
+import com.shakiv.husain.disneywatch.data.model.image.Image
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.databinding.FragmentViewDetailsBinding
 import com.shakiv.husain.disneywatch.ui.BaseFragment
@@ -145,6 +146,8 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val tvShowDetails = it.data
                         bindMovieDetailsData(tvShowDetails)
+
+
                         logd(" Success getTvShowData : ${it.data}")
                     }
 
@@ -166,6 +169,7 @@ class ViewDetailsFragment : BaseFragment() {
                     is Resource.Success -> {
                         val tvShowCredits = it.data?.cast?: emptyList()
                         castAdapter.submitList(tvShowCredits)
+                        binding.recommendedLayout.root.isVisible = tvShowCredits.isNotEmpty()
                     }
 
                     is Resource.Loading -> {
@@ -406,6 +410,11 @@ class ViewDetailsFragment : BaseFragment() {
                 ImageUtils.setImage(
                     tvshowDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
                 )
+
+                val listOfBackDrop = listOf(
+                    Image(file_path = tvshowDetails.backdrop_path.orEmpty())
+                )
+                horizontalImageAdapter.submitList(listOfBackDrop)
             }
         }
 
