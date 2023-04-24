@@ -4,7 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.shakiv.husain.disneywatch.data.api.TvShowService
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
+import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.network.ApiResponse
 import com.shakiv.husain.disneywatch.data.network.NetworkRequest
@@ -26,19 +27,20 @@ class TvShowRepository @Inject constructor(private val tvShowService: TvShowServ
         }.flow
     }
 
-    fun getTvShowDetails(tvShowId:String) = flow<Resource<MovieDetails>>{
+    fun getTvShowDetails(tvShowId: String) = flow<Resource<TvShowDetails>> {
         emit(Resource.Loading())
         try {
             val tvShowResponse = NetworkRequest.process {
                 tvShowService.getTvShowDetails(tvShowId, API_KEY)
             }.run {
 
-                when(this){
-                    is ApiResponse.Success->{
+                when (this) {
+                    is ApiResponse.Success -> {
                         results.orThrow("Tv Show")
 
                     }
-                    is ApiResponse.Failure->{
+
+                    is ApiResponse.Failure -> {
                         throwError("Tv Show")
                     }
                 }
@@ -46,10 +48,34 @@ class TvShowRepository @Inject constructor(private val tvShowService: TvShowServ
 
             emit(Resource.Success(tvShowResponse))
 
-        }catch (e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
-            emit(Resource.Failure(null,e.localizedMessage))
+            emit(Resource.Failure(null, e.localizedMessage))
         }
+    }
+
+    fun getCredits(tvShowId: String) = flow<Resource<CastResponse>> {
+        emit(Resource.Loading())
+        try {
+            val creditResponse = NetworkRequest.process {
+                tvShowService.getCredits(tvShowId, API_KEY)
+            }.run {
+                when (this) {
+                    is ApiResponse.Success -> {
+                        results.orThrow("Tv Show Credits")
+                    }
+                    is ApiResponse.Failure -> {
+                        throwError("Tv Show Credits")
+                    }
+                }
+
+            }
+            emit(Resource.Success(creditResponse))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(Resource.Failure(null, e.localizedMessage))
+        }
+
     }
 
 }

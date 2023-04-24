@@ -3,6 +3,7 @@ package com.shakiv.husain.disneywatch.di
 import com.shakiv.husain.disneywatch.data.api.CollectionService
 import com.shakiv.husain.disneywatch.data.api.MovieService
 import com.shakiv.husain.disneywatch.data.api.TvShowService
+import com.shakiv.husain.disneywatch.data.mapper.ObjectMapper
 import com.shakiv.husain.disneywatch.util.ApiConstants.BASE_URL
 import dagger.Module
 import dagger.Provides

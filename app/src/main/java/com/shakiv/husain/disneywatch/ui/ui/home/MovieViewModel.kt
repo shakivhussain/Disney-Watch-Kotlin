@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse

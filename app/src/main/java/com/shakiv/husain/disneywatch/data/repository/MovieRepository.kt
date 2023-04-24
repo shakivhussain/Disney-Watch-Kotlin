@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.shakiv.husain.disneywatch.data.api.MovieService
 import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
-import com.shakiv.husain.disneywatch.data.model.details.MovieDetails
+import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.image.ImageResponse
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
 import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse

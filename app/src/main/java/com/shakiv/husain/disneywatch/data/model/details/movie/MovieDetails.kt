@@ -1,4 +1,4 @@
-package com.shakiv.husain.disneywatch.data.model.details
+package com.shakiv.husain.disneywatch.data.model.details.movie
 
 import com.google.gson.annotations.SerializedName
 
