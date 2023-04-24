@@ -137,6 +137,7 @@ class ViewDetailsFragment : BaseFragment() {
     private fun fetchTvDetails(id: String) {
         tvShowViewModel.getTvShowDetails(id)
         tvShowViewModel.getCredits(id)
+        tvShowViewModel.getVideos(id)
 
 
         lifecycleScope.launch {
@@ -162,7 +163,6 @@ class ViewDetailsFragment : BaseFragment() {
             }
         }
 
-
         lifecycleScope.launch {
             tvShowViewModel.tvShowCredit.collectLatest {
                 when (it) {
@@ -182,6 +182,33 @@ class ViewDetailsFragment : BaseFragment() {
                 }
             }
 
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.tvShowVideos.collectLatest {
+                when (it) {
+                    is Resource.Success -> {
+                        val tvShowVideos = it.data?.previewList?: emptyList()
+                        videoAdapter.submitList(tvShowVideos)
+                        binding.viewPagerBottom.root.isVisible = tvShowVideos.isNotEmpty()
+                    }
+
+                    is Resource.Loading -> {
+                    }
+
+                    is Resource.Failure -> {
+                    }
+
+                    else -> {}
+                }
+            }
+
+        }
+
+        lifecycleScope.launch {
+            tvShowViewModel.getRecommendedTvShows(id).collectLatest {
+                recommendedMovieAdapter.submitData(it)
+            }
         }
 
     }
@@ -442,6 +469,7 @@ class ViewDetailsFragment : BaseFragment() {
     }
 
     private fun onImageClick(image: String) {
+
     }
 
 }

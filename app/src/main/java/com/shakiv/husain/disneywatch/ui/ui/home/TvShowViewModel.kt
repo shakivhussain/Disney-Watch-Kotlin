@@ -8,8 +8,10 @@ import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.data.network.Resource
 import com.shakiv.husain.disneywatch.data.repository.TvShowRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +29,9 @@ class TvShowViewModel @Inject constructor(private val tvShowRepository: TvShowRe
 
     private val _tvShowCredits = MutableStateFlow<Resource<CastResponse>?>(null)
     val tvShowCredit = _tvShowCredits.asStateFlow()
+
+    private val _tvShowVideos = MutableStateFlow<Resource<MoviePreviewResponse>?>(null)
+    val tvShowVideos = _tvShowVideos.asStateFlow()
 
     fun searchTvShow(query: String) {
         viewModelScope.launch {
@@ -57,6 +62,20 @@ class TvShowViewModel @Inject constructor(private val tvShowRepository: TvShowRe
                     _tvShowCredits.emit(it)
                 }
         }
+    }
+
+    fun getVideos(tvShowId: String) {
+        viewModelScope.launch {
+            tvShowRepository.getTvShowVideos(tvShowId)
+                .collectLatest {
+
+                }
+        }
+    }
+
+
+    fun getRecommendedTvShows(tvShowId: String): Flow<PagingData<Movie>> {
+        return tvShowRepository.getRecommendedTvShows(tvShowId).cachedIn(viewModelScope)
     }
 
 }

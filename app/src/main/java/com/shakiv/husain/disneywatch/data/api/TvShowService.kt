@@ -5,6 +5,7 @@ import com.shakiv.husain.disneywatch.data.model.cast.CastResponse
 import com.shakiv.husain.disneywatch.data.model.details.movie.MovieDetails
 import com.shakiv.husain.disneywatch.data.model.details.tvshow.TvShowDetails
 import com.shakiv.husain.disneywatch.data.model.movie.Movie
+import com.shakiv.husain.disneywatch.data.model.videos.MoviePreviewResponse
 import com.shakiv.husain.disneywatch.util.ApiConstants
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_API
 import com.shakiv.husain.disneywatch.util.ApiConstants.KEY_TV_ID
@@ -35,5 +36,18 @@ interface TvShowService {
         @Path(KEY_TV_ID) tvShowId: String,
         @Query(KEY_API) apiKey: String,
     ) : Response<CastResponse>
+
+    @GET("tv/{$KEY_TV_ID}/videos")
+    suspend fun getTvShowVideos(
+        @Path(KEY_TV_ID) tvShowId: String,
+        @Query(KEY_API) apiKey: String
+    ): Response<MoviePreviewResponse>
+
+    @GET("tv/{$KEY_TV_ID}/recommendations")
+    suspend fun getRecommendations(
+        @Path(KEY_TV_ID) tvShowId: String,
+        @Query(ApiConstants.KEY_PAGE) page: Int = 1,
+        @Query(KEY_API) apiKey: String
+    ) :Response<BaseResponse<List<Movie>>>
 
 }
