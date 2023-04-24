@@ -138,6 +138,7 @@ class ViewDetailsFragment : BaseFragment() {
                         val backdrops = it.data?.backdrops ?: emptyList()
                         horizontalImageAdapter.submitList(backdrops)
                     }
+
                     is Resource.Loading -> {}
                     is Resource.Failure -> {}
                 }
@@ -145,7 +146,6 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
     }
-
 
 
     override fun onCreateView(
@@ -342,7 +342,7 @@ class ViewDetailsFragment : BaseFragment() {
             tvShowViewModel.tvShowCredit.collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        val tvShowCredits = it.data?.cast?: emptyList()
+                        val tvShowCredits = it.data?.cast ?: emptyList()
                         castAdapter.submitList(tvShowCredits)
                         binding.castLayout.root.isVisible = tvShowCredits.isNotEmpty()
                     }
@@ -363,14 +363,17 @@ class ViewDetailsFragment : BaseFragment() {
             tvShowViewModel.tvShowVideos.collectLatest {
                 when (it) {
                     is Resource.Success -> {
-                        val tvShowVideos = it.data?.previewList?: emptyList()
+                        val tvShowVideos = it.data?.previewList ?: emptyList()
                         videoAdapter.submitList(tvShowVideos)
                         binding.viewPagerBottom.root.isVisible = tvShowVideos.isNotEmpty()
                     }
+
                     is Resource.Loading -> {
                     }
+
                     is Resource.Failure -> {
                     }
+
                     else -> {}
                 }
             }
@@ -391,16 +394,19 @@ class ViewDetailsFragment : BaseFragment() {
         }
         binding.apply {
             movieDetails.let { movieDetails: MovieDetails ->
-                tvMovieName.text = movieDetails.title.orEmpty()
-                tvMovieDesc.text = movieDetails.overview.orEmpty()
-                tvStatus.text = movieDetails.status.orEmpty()
-                tvVote.text = movieDetails.vote_count?.toKNotation().orEmpty()
-                tvReleaseDate.text = movieDetails.release_date.orEmpty()
+                tvMovieName.text = movieDetails.name.orEmpty()
+                val collectionDetails = movieDetails.parts?.getOrNull(0)
+                collectionDetails?.let { collection ->
+                    tvTitle.text = collection.title.orEmpty()
+                    tvRelease.text = collection.mediaType.orEmpty()
+                    tvReleaseDate.text = collection.releaseDate.orEmpty()
+                    tvRevenue.text = "---"
+                    tvMovieDesc.text = collection.overview.orEmpty()
+                    tvStatusTitle.text = resources.getString(R.string.vote_average)
+                    tvStatus.text = collection.voteAverage.toStringOrEmpty()
+                    tvVote.text = collection.voteCount?.toKNotation().orEmpty()
+                }
 
-                tvTitle.text = movieDetails.title.orEmpty()
-                tvRelease.text = movieDetails.status.orEmpty()
-                tvReleaseDate.text = movieDetails.release_date.orEmpty()
-                tvRevenue.text = movieDetails.revenue?.toKNotation()
                 ImageUtils.setImage(
                     movieDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
                 )
@@ -410,12 +416,12 @@ class ViewDetailsFragment : BaseFragment() {
     }
 
     private fun bindMovieDetailsData(tvShowDetails: TvShowDetails?) {
-        if (tvShowDetails==null){
+        if (tvShowDetails == null) {
             return
         }
 
         binding.apply {
-            tvShowDetails.let { tvshowDetails : TvShowDetails ->
+            tvShowDetails.let { tvshowDetails: TvShowDetails ->
                 tvMovieDesc.text = tvshowDetails.overview.orEmpty()
                 tvStatus.text = tvshowDetails.status.orEmpty()
                 tvVote.text = tvshowDetails.vote_count?.toKNotation().orEmpty()
@@ -454,7 +460,8 @@ class ViewDetailsFragment : BaseFragment() {
 
         lifecycleScope.launch {
             recommendedMovieAdapter.loadStateFlow.collectLatest {
-                binding.recommendedLayout.root.isVisible = it.refresh is LoadState.NotLoading && recommendedMovieAdapter.itemCount > 1
+                binding.recommendedLayout.root.isVisible =
+                    it.refresh is LoadState.NotLoading && recommendedMovieAdapter.itemCount > 1
             }
         }
 
