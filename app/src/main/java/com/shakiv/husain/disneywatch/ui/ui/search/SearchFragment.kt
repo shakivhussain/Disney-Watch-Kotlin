@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
@@ -21,9 +23,12 @@ import com.shakiv.husain.disneywatch.ui.ui.home.TvShowViewModel
 import com.shakiv.husain.disneywatch.util.AppConstants.ID
 import com.shakiv.husain.disneywatch.util.AppConstants.MEDIA_TYPE
 import com.shakiv.husain.disneywatch.util.doOnDebouncedTextChange
+import com.shakiv.husain.disneywatch.util.getCurrentVisiblePosition
+import com.shakiv.husain.disneywatch.util.logd
 import com.shakiv.husain.disneywatch.util.navigateToDestination
 import com.shakiv.husain.disneywatch.util.setLinearLayoutManager
 import com.shakiv.husain.disneywatch.util.toStringOrEmpty
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,16 +39,47 @@ class SearchFragment : BaseFragment() {
 
     @Inject lateinit var factory: MainViewModelFactory
     lateinit var movieViewModel: MovieViewModel
-    lateinit var tvShowViewModel: TvShowViewModel
+    private lateinit var tvShowViewModel: TvShowViewModel
     lateinit var collectionViewModel: CollectionViewModel
     lateinit var moviesAdapter: MovieAdapter
     lateinit var tvShowAdapter: MovieAdapter
     lateinit var collectionsAdapter: MovieAdapter
+    private var currentPositionOfMovieRecyclerView: Int = 0
+    private var currentPositionOfCollectionRecyclerView: Int = 0
+    private var currentPositionOfTvShowRecyclerView: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            delay(400)
+            binding.layoutSearch.editText.doOnDebouncedTextChange(lifecycle, 500) { editable ->
+                val searchQuery = editable.toStringOrEmpty()
+                logd("searchQuery : $searchQuery", "CheckLog")
+                searchQuery(searchQuery)
+            }
+        }
         initViewModels()
         initAdapters()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        currentPositionOfMovieRecyclerView =
+            binding.layoutMovies.recyclerView.getCurrentVisiblePosition()
+        currentPositionOfCollectionRecyclerView =
+            binding.layoutCollections.recyclerView.getCurrentVisiblePosition()
+        currentPositionOfTvShowRecyclerView =
+            binding.layoutTvShow.recyclerView.getCurrentVisiblePosition()
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+            binding.layoutMovies.recyclerView.scrollToPosition(currentPositionOfMovieRecyclerView)
+            binding.layoutCollections.recyclerView.scrollToPosition(currentPositionOfCollectionRecyclerView)
+            binding.layoutTvShow.recyclerView.scrollToPosition(currentPositionOfTvShowRecyclerView)
     }
 
     private fun searchQuery(query: String) {
@@ -97,13 +133,6 @@ class SearchFragment : BaseFragment() {
 
     override fun bindListeners() {
         super.bindListeners()
-        binding.layoutSearch.editText.doOnDebouncedTextChange(lifecycle, 500) { editable ->
-
-            val searchQuery = editable.toStringOrEmpty()
-            searchQuery(searchQuery)
-
-        }
-
 
     }
 
@@ -125,6 +154,26 @@ class SearchFragment : BaseFragment() {
         lifecycleScope.launch {
             collectionViewModel.collectionPagingSource.collectLatest {
                 collectionsAdapter.submitData(it)
+            }
+        }
+
+
+        lifecycleScope.launch {
+
+            moviesAdapter.loadStateFlow.collectLatest {
+
+                when(it.refresh){
+                    is  LoadState.Loading->{}
+                    is LoadState.NotLoading -> {
+                        val isEmptyAdapter = (moviesAdapter.itemCount < 1)
+                        val needToShowRecyclerData = !isEmptyAdapter
+                        binding.layoutMovies.root.isVisible = needToShowRecyclerData
+                        binding.layoutTvShow.root.isVisible = needToShowRecyclerData
+                        binding.layoutCollections.root.isVisible = needToShowRecyclerData
+                        binding.iVEmptyBackground.isVisible = isEmptyAdapter
+                    }
+                    else -> {}
+                }
             }
         }
     }

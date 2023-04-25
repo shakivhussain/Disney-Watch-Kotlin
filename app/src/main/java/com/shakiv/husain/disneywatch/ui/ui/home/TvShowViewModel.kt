@@ -68,7 +68,7 @@ class TvShowViewModel @Inject constructor(private val tvShowRepository: TvShowRe
         viewModelScope.launch {
             tvShowRepository.getTvShowVideos(tvShowId)
                 .collectLatest {
-
+                    _tvShowVideos.emit(it)
                 }
         }
     }
