@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,7 @@ import kotlin.math.abs
 class HomeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentHomeBinding
+    private var rootView: ConstraintLayout? = null
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -61,8 +63,11 @@ class HomeFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        if (rootView == null) {
+            binding = FragmentHomeBinding.inflate(inflater, container, false)
+            rootView = binding.root
+        }
+        return rootView as ConstraintLayout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

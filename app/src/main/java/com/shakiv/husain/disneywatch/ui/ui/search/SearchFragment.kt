@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class SearchFragment : BaseFragment() {
 
     lateinit var binding: LayoutSearchFragmentBinding
+    private var rootView: ConstraintLayout? = null
 
     @Inject lateinit var factory: MainViewModelFactory
     lateinit var movieViewModel: MovieViewModel
@@ -77,9 +79,11 @@ class SearchFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-            binding.layoutMovies.recyclerView.scrollToPosition(currentPositionOfMovieRecyclerView)
-            binding.layoutCollections.recyclerView.scrollToPosition(currentPositionOfCollectionRecyclerView)
-            binding.layoutTvShow.recyclerView.scrollToPosition(currentPositionOfTvShowRecyclerView)
+        binding.layoutMovies.recyclerView.scrollToPosition(currentPositionOfMovieRecyclerView)
+        binding.layoutCollections.recyclerView.scrollToPosition(
+            currentPositionOfCollectionRecyclerView
+        )
+        binding.layoutTvShow.recyclerView.scrollToPosition(currentPositionOfTvShowRecyclerView)
     }
 
     private fun searchQuery(query: String) {
@@ -92,8 +96,11 @@ class SearchFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        binding = LayoutSearchFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+        if (rootView == null) {
+            binding = LayoutSearchFragmentBinding.inflate(inflater, container, false)
+            rootView = binding.root
+        }
+        return rootView as ConstraintLayout
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -162,8 +169,8 @@ class SearchFragment : BaseFragment() {
 
             moviesAdapter.loadStateFlow.collectLatest {
 
-                when(it.refresh){
-                    is  LoadState.Loading->{}
+                when (it.refresh) {
+                    is LoadState.Loading -> {}
                     is LoadState.NotLoading -> {
                         val isEmptyAdapter = (moviesAdapter.itemCount < 1)
                         val needToShowRecyclerData = !isEmptyAdapter
@@ -172,6 +179,7 @@ class SearchFragment : BaseFragment() {
                         binding.layoutCollections.root.isVisible = needToShowRecyclerData
                         binding.iVEmptyBackground.isVisible = isEmptyAdapter
                     }
+
                     else -> {}
                 }
             }

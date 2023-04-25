@@ -6,6 +6,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -50,6 +51,7 @@ import javax.inject.Inject
 class ViewDetailsFragment : BaseFragment() {
 
     private lateinit var binding: FragmentViewDetailsBinding
+    private var rootView : ConstraintLayout?=null
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var collectionViewModel: CollectionViewModel
@@ -181,8 +183,11 @@ class ViewDetailsFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentViewDetailsBinding.inflate(inflater, container, false)
-        return binding.root
+        if (rootView==null){
+            binding = FragmentViewDetailsBinding.inflate(inflater, container, false)
+            rootView=binding.root
+        }
+        return rootView as ConstraintLayout
     }
 
 
@@ -217,7 +222,7 @@ class ViewDetailsFragment : BaseFragment() {
         val recommendedForYou = getStringFromId(R.string.recommended_for_you)
         val videos = getStringFromId(R.string.videos)
 
-//        bindMovieDetailsData(movieDetails)
+        bindMovieDetailsData(movieDetails)
 
         binding.layoutHeader.apply {
             buttonBack.isVisible = true
