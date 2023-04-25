@@ -61,6 +61,7 @@ class ViewDetailsFragment : BaseFragment() {
     private lateinit var videoAdapter: HorizontalVideoAdapter
     private var movieDetails: MovieDetails? = null
     private lateinit var autoScrollHandler: Handler
+     lateinit var type : MediaType
 
     @Inject
     lateinit var factory: MainViewModelFactory
@@ -70,7 +71,7 @@ class ViewDetailsFragment : BaseFragment() {
 
         val arguments = requireArguments()
         val id = arguments.getString(ID).toStringOrEmpty()
-        val type = arguments.getSerializable(MEDIA_TYPE) as? MediaType
+        type = arguments.getSerializable(MEDIA_TYPE) as? MediaType ?: MediaType.MOVIE
 
         autoScrollHandler = Handler(Looper.getMainLooper())
 
@@ -120,10 +121,11 @@ class ViewDetailsFragment : BaseFragment() {
                 when (it) {
                     is Resource.Success -> {
                         movieDetails = it.data
-                        bindMovieDetailsData(movieDetails)
+                        bindCollectionDetailsData(movieDetails)
                     }
 
                     is Resource.Loading -> {
+
                     }
 
                     else -> {}
@@ -146,6 +148,34 @@ class ViewDetailsFragment : BaseFragment() {
         }
 
     }
+
+    private fun bindCollectionDetailsData(movieDetails: MovieDetails?) {
+        if (movieDetails == null) {
+            return
+        }
+        binding.apply {
+            movieDetails.let { movieDetails: MovieDetails ->
+                tvMovieName.text = movieDetails.name.orEmpty()
+                val collectionDetails = movieDetails.parts?.getOrNull(0)
+                collectionDetails?.let { collection ->
+                    tvTitle.text = collection.title.orEmpty()
+                    tvRelease.text = collection.mediaType.orEmpty()
+                    tvReleaseDate.text = collection.releaseDate.orEmpty()
+                    tvRevenue.text = "---"
+                    tvMovieDesc.text = collection.overview.orEmpty()
+                    tvStatusTitle.text = resources.getString(R.string.vote_average)
+                    tvStatus.text = collection.voteAverage.toStringOrEmpty()
+                    tvVote.text = collection.voteCount?.toKNotation().orEmpty()
+                }
+
+                ImageUtils.setImage(
+                    movieDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
+                )
+
+            }
+        }
+    }
+
 
 
     override fun onCreateView(
@@ -176,6 +206,7 @@ class ViewDetailsFragment : BaseFragment() {
 
         val bundle = Bundle()
         bundle.putString(ID, id)
+        bundle.putSerializable(MEDIA_TYPE, type)
         findNavController().navigate(R.id.viewDetailsFragment, bundle)
     }
 
@@ -186,7 +217,7 @@ class ViewDetailsFragment : BaseFragment() {
         val recommendedForYou = getStringFromId(R.string.recommended_for_you)
         val videos = getStringFromId(R.string.videos)
 
-        bindMovieDetailsData(movieDetails)
+//        bindMovieDetailsData(movieDetails)
 
         binding.layoutHeader.apply {
             buttonBack.isVisible = true
@@ -394,19 +425,16 @@ class ViewDetailsFragment : BaseFragment() {
         }
         binding.apply {
             movieDetails.let { movieDetails: MovieDetails ->
-                tvMovieName.text = movieDetails.name.orEmpty()
-                val collectionDetails = movieDetails.parts?.getOrNull(0)
-                collectionDetails?.let { collection ->
-                    tvTitle.text = collection.title.orEmpty()
-                    tvRelease.text = collection.mediaType.orEmpty()
-                    tvReleaseDate.text = collection.releaseDate.orEmpty()
-                    tvRevenue.text = "---"
-                    tvMovieDesc.text = collection.overview.orEmpty()
-                    tvStatusTitle.text = resources.getString(R.string.vote_average)
-                    tvStatus.text = collection.voteAverage.toStringOrEmpty()
-                    tvVote.text = collection.voteCount?.toKNotation().orEmpty()
-                }
+                tvMovieName.text = movieDetails.title.orEmpty()
+                tvMovieDesc.text = movieDetails.overview.orEmpty()
+                tvStatus.text = movieDetails.status.orEmpty()
+                tvVote.text = movieDetails.vote_count?.toKNotation().orEmpty()
+                tvReleaseDate.text = movieDetails.release_date.orEmpty()
 
+                tvTitle.text = movieDetails.title.orEmpty()
+                tvRelease.text = movieDetails.status.orEmpty()
+                tvReleaseDate.text = movieDetails.release_date.orEmpty()
+                tvRevenue.text = movieDetails.revenue?.toKNotation()
                 ImageUtils.setImage(
                     movieDetails.poster_path?.convertToFullUrl().orEmpty(), layoutPoster.imageView
                 )
