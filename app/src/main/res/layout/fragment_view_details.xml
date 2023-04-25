@@ -73,6 +73,7 @@
                     style="@style/HeadingSemiBold_20"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:maxLines="2"
                     tools:text="@string/the_placeholder"
                     android:textSize="18sp"

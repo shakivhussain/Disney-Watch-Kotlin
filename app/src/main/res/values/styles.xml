@@ -107,7 +107,7 @@
     <style name="Widget.My.App.SearchEditText" parent="Widget.AppCompat.EditText">
         <item name="android:drawableStart">@drawable/ic_search_icon</item>
         <item name="android:drawablePadding">@dimen/padding_16dp</item>
-        <item name="drawableTint">?attr/subtitleColor</item>
+        <item name="drawableTint">?attr/colorHeading</item>
         <item name="android:inputType">text</item>
         <item name="android:hint">@string/search_movies_tv_shows_collections</item>
         <item name="android:imeOptions">actionDone</item>
@@ -115,7 +115,7 @@
         <item name="singleLine">true</item>
         <item name="android:padding">@dimen/_16sdp</item>
         <item name="android:textColor">?attr/colorHeading</item>
-        <item name="android:textColorHint">?attr/subtitleColor</item>
+        <item name="android:textColorHint">?attr/colorHeading</item>
         <item name="android:textSize">@dimen/textSize16</item>
     </style>
 

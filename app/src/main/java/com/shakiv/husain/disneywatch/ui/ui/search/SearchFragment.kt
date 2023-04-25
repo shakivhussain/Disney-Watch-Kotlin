@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shakiv.husain.disneywatch.DisneyApplication
 import com.shakiv.husain.disneywatch.R
@@ -152,6 +154,26 @@ class SearchFragment : BaseFragment() {
         lifecycleScope.launch {
             collectionViewModel.collectionPagingSource.collectLatest {
                 collectionsAdapter.submitData(it)
+            }
+        }
+
+
+        lifecycleScope.launch {
+
+            moviesAdapter.loadStateFlow.collectLatest {
+
+                when(it.refresh){
+                    is  LoadState.Loading->{}
+                    is LoadState.NotLoading -> {
+                        val isEmptyAdapter = (moviesAdapter.itemCount < 1)
+                        val needToShowRecyclerData = !isEmptyAdapter
+                        binding.layoutMovies.root.isVisible = needToShowRecyclerData
+                        binding.layoutTvShow.root.isVisible = needToShowRecyclerData
+                        binding.layoutCollections.root.isVisible = needToShowRecyclerData
+                        binding.iVEmptyBackground.isVisible = isEmptyAdapter
+                    }
+                    else -> {}
+                }
             }
         }
     }
