@@ -93,9 +93,7 @@ class HomeFragment : BaseFragment() {
         binding.viewPagerBottom.viewPager.apply {
             (getChildAt(0) as RecyclerView).clearOnChildAttachStateChangeListeners()
             adapter = horizontalAdapter
-
             binding.viewPager.setPageTransformer(getCompositePageTransformer())
-
             clipToPadding = false
             clipChildren = false
             offscreenPageLimit = 3
@@ -264,7 +262,6 @@ class HomeFragment : BaseFragment() {
             val r = 1 - abs(position)
             page.scaleY = 0.85f + r * 0.15f
         }
-
 
         return compositePageTransformer
 
